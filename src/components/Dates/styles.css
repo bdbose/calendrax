@@ -1,0 +1,73 @@
+.day-wrapper {
+  width: 80px;
+  height: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding-bottom: 8px;
+  border-radius: 0;
+  gap: 2px;
+  cursor: pointer;
+  position: relative;
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  font-size: 16px;
+  font-weight: 400;
+  color: #333;
+}
+
+/* Mobile-specific: no borders or shadows, flexible sizing */
+@media (max-width: 768px) {
+  .day-wrapper {
+    border: none;
+    background: transparent;
+    width: 100%;
+    min-height: 60px;
+    height: auto;
+  }
+  .day-wrapper:hover{
+    background-color: #4a7ba7;
+  }
+  
+  .day-wrapper.checkin,
+  .day-wrapper.checkout {
+    background: #4a7ba7;
+    border: none;
+  }
+  
+  .day-wrapper.inRange {
+    background: #b8d4e8;
+    border: none;
+  }
+  
+  .day-wrapper.blocked {
+    background: transparent;
+  }
+}
+
+.day-wrapper.blocked {
+  color: #ccc;
+  background: #fafafa;
+  pointer-events: none;
+}
+
+.day-wrapper.checkin,
+.day-wrapper.checkout {
+  background: #4a7ba7;
+  color: #fff;
+}
+
+.day-wrapper.inRange {
+  background: #b8d4e8;
+  color: #333;
+}
+
+/* .day-wrapper:hover:not(.blocked) {
+  background: #f0f7ff;
+  border-color: #4a7ba7;
+} */
+
+.day-label {
+  display: none;
+}
