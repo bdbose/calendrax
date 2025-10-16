@@ -1,0 +1,29 @@
+# Source files
+src/
+public/
+
+# Development files
+.vscode/
+.cursor/
+*.log
+*.lock
+
+# Example
+example/
+
+# Config files
+vite.config.ts
+tsconfig.json
+tsconfig.node.json
+eslint.config.js
+rollup.config.js
+
+# Git
+.git/
+.gitignore
+
+# Other
+node_modules/
+.DS_Store
+*.tsbuildinfo
+

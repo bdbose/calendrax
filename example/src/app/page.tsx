@@ -1,0 +1,127 @@
+'use client'
+
+import { useState } from 'react'
+import { DatePicker } from 'calendrax'
+import type { SelectDateType, CalendarEvent } from 'calendrax'
+import 'calendrax/styles.css'
+
+export default function Home() {
+  const [open, setOpen] = useState(false)
+  const [dates, setDates] = useState<SelectDateType>({ 
+    checkin: null, 
+    checkout: null 
+  })
+
+  const today = new Date()
+
+  const events: CalendarEvent[] = [
+    { start_date: "2025-10-02", end_date: "2025-10-05", name: "Dusshera Weekend", specific_teams: "All Teams" },
+    { start_date: "2025-10-18", end_date: "2025-10-22", name: "Diwali Weekend", specific_teams: "All Teams" },
+    { start_date: "2025-12-25", end_date: "2025-12-28", name: "Christmas Weekend", specific_teams: "All Teams" },
+    { start_date: "2026-01-01", end_date: "2026-01-04", name: "New Year Weekend", specific_teams: "All Teams" },
+    { start_date: "2026-01-14", end_date: "2026-01-14", name: "Makar Sankranti", specific_teams: "Team A, Team B, Team C, Team Q, Team D, Team G" },
+    { start_date: "2026-01-15", end_date: "2026-01-15", name: "Pongal", specific_teams: "Team F - South" },
+    { start_date: "2026-01-24", end_date: "2026-01-26", name: "Republic Day Weekend", specific_teams: "All Teams" },
+    { start_date: "2026-02-28", end_date: "2026-03-04", name: "Holi Weekend", specific_teams: "Team A, Team B, Team C, Team Q, Team D, Team G" },
+    { start_date: "2026-04-04", end_date: "2026-04-05", name: "Good Friday Weekend", specific_teams: "All Teams" },
+    { start_date: "2026-05-01", end_date: "2026-05-03", name: "Maharashtra Day Weekend", specific_teams: "Team A, Team B, Team C, Team Q" },
+    { start_date: "2026-07-17", end_date: "2026-07-19", name: "Eid Weekend", specific_teams: "All Teams" },
+    { start_date: "2026-08-15", end_date: "2026-08-16", name: "Independence Day Weekend", specific_teams: "All Teams" },
+    { start_date: "2026-09-04", end_date: "2026-09-06", name: "Janmashtami Weekend", specific_teams: "All Teams" },
+    { start_date: "2026-10-02", end_date: "2026-10-04", name: "Gandhi Jayanti Weekend", specific_teams: "All Teams" }
+  ]
+
+  return (
+    <main>
+      <div className="container">
+        <h1>Calendrax Next.js Example</h1>
+        <p>A beautiful React calendar component with event support and date range selection</p>
+
+        <div className="demo-section">
+          <h2>Desktop Calendar with Events</h2>
+          <div className="calendar-wrapper">
+            <DatePicker
+              dates={dates}
+              setDates={setDates}
+              open={true}
+              setOpen={setOpen}
+              mobile={false}
+              events={events}
+              showEvents={true}
+              startMonth={today.getMonth() + 1}
+              startYear={today.getFullYear()}
+            >
+              <button 
+                onClick={() => setOpen(!open)}
+                style={{
+                  padding: '12px 24px',
+                  fontSize: '16px',
+                  borderRadius: '8px',
+                  border: '1px solid #ddd',
+                  background: '#fff',
+                  cursor: 'pointer'
+                }}
+              >
+                {(dates.checkin && dates.checkin.toDateString()) || "Check-in"} | {(dates.checkout && dates.checkout.toDateString()) || "Check-out"}
+              </button>
+            </DatePicker>
+          </div>
+
+          {(dates.checkin || dates.checkout) && (
+            <div className="selected-dates">
+              <p><strong>Selected Dates:</strong></p>
+              <p>Check-in: {dates.checkin ? dates.checkin.toDateString() : 'Not selected'}</p>
+              <p>Check-out: {dates.checkout ? dates.checkout.toDateString() : 'Not selected'}</p>
+            </div>
+          )}
+        </div>
+
+        <div className="demo-section">
+          <h2>Installation</h2>
+          <div className="code-block">
+            <code>npm install calendrax</code>
+          </div>
+        </div>
+
+        <div className="demo-section">
+          <h2>Usage</h2>
+          <div className="code-block">
+            <code>{`import { DatePicker } from 'calendrax'
+import type { SelectDateType, CalendarEvent } from 'calendrax'
+import 'calendrax/styles.css'
+
+function App() {
+  const [dates, setDates] = useState<SelectDateType>({ 
+    checkin: null, 
+    checkout: null 
+  })
+  const [open, setOpen] = useState(false)
+  
+  const events: CalendarEvent[] = [
+    { 
+      start_date: "2025-10-02", 
+      end_date: "2025-10-05", 
+      name: "Event Name",
+      specific_teams: "All Teams" 
+    }
+  ]
+
+  return (
+    <DatePicker
+      dates={dates}
+      setDates={setDates}
+      open={open}
+      setOpen={setOpen}
+      events={events}
+      showEvents={true}
+      mobile={false}
+    />
+  )
+}`}</code>
+          </div>
+        </div>
+      </div>
+    </main>
+  )
+}
+

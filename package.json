@@ -3,17 +3,47 @@
   "private": false,
   "version": "0.1.0",
   "type": "module",
+  "description": "A React/TypeScript calendar component library with event support and date range selection",
+  "author": "Bidipto Bose <bdbose123@gmail.com> (https://bdbose.in)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bdbose/calendrax"
+  },
+  "keywords": [
+    "react",
+    "calendar",
+    "date-picker",
+    "date-range",
+    "typescript",
+    "events"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "rollup -c",
+    "build:watch": "rollup -c -w",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "lint:fix": "eslint . --fix",
+    "preview": "vite preview",
+    "prepublishOnly": "npm run build",
+    "setup:example": "bash scripts/setup-example.sh",
+    "prepare:publish": "bash scripts/prepare-publish.sh"
   },
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
   "types": "dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.esm.js",
+      "require": "./dist/index.cjs.js",
+      "types": "./dist/types/index.d.ts"
+    },
+    "./styles.css": "./dist/styles.css"
+  },
   "files": [
-    "dist"
+    "dist",
+    "README.md",
+    "LICENSE"
   ],
   "sideEffects": [
     "**/*.css"

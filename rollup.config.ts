@@ -6,9 +6,26 @@ import css from "rollup-plugin-import-css";
 export default {
   input: "src/index.ts",
   output: [
-    { file: "dist/index.cjs.js", format: "cjs" },
-    { file: "dist/index.esm.js", format: "esm" },
+    { 
+      file: "dist/index.cjs.js", 
+      format: "cjs",
+      sourcemap: true,
+      exports: "named"
+    },
+    { 
+      file: "dist/index.esm.js", 
+      format: "esm",
+      sourcemap: true
+    },
   ],
-  external: ["react", "react-dom"],
-  plugins: [nodeResolve(), commonjs(), css(), typescript()],
+  external: ["react", "react-dom", "react/jsx-runtime"],
+  plugins: [
+    nodeResolve(), 
+    commonjs(), 
+    css({ output: "styles.css", minify: true }), 
+    typescript({
+      tsconfig: "./tsconfig.json",
+      useTsconfigDeclarationDir: true,
+    })
+  ],
 };
