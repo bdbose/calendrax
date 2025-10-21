@@ -6,7 +6,8 @@ import type { SelectDateType, BlockedDates, DayInfo, MinNights } from "../../typ
 import { getDateState, nextSelectionOnClick, isBeforeToday } from "../../utils/selection";
 import { buildEventMap, getEventLabel } from "../../utils/events";
 import { buildDayInfoMap, getDayInfo } from "../../utils/dayInfo";
-import { generateMinNightsEvents } from "../../utils/minNights";
+import { generateMinNightsEvents, getBlockedDatesFromMinNights } from "../../utils/minNights";
+import { formatDate } from "../../utils/dateHelpers";
 
 const week = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
 const months = [
@@ -52,14 +53,37 @@ const Months = (props: MonthProps) => {
   }, [props.date]);
 
   // Merge user events with auto-generated minimum nights events
+  // Only show minNights event when that date is selected as check-in
   const allEvents = useMemo(() => {
-    const minNightsEvents = generateMinNightsEvents(props.minNights);
+    const minNightsEvents = generateMinNightsEvents(props.minNights, props.date.checkin, props.blockedDates);
     const userEvents = props.events || [];
     return [...minNightsEvents, ...userEvents];
-  }, [props.events, props.minNights]);
+  }, [props.events, props.minNights, props.date.checkin, props.blockedDates]);
 
   const eventMap = useMemo(() => buildEventMap(allEvents), [allEvents]);
   const dayInfoMap = useMemo(() => buildDayInfoMap(props.dayInfo), [props.dayInfo]);
+  
+  // Create a map to check if a date has a minNights event
+  const minNightsEventDates = useMemo(() => {
+    const dates = new Set<string>();
+    const minNightsEvents = generateMinNightsEvents(props.minNights, props.date.checkin, props.blockedDates);
+    minNightsEvents.forEach(event => {
+      dates.add(event.start_date);
+    });
+    return dates;
+  }, [props.minNights, props.date.checkin, props.blockedDates]);
+  
+  // Get dates blocked by minimum nights restriction
+  const blockedByMinNights = useMemo(() => 
+    getBlockedDatesFromMinNights(props.date.checkin, props.minNights, props.blockedDates),
+    [props.date.checkin, props.minNights, props.blockedDates]
+  );
+  
+  // Combine original blocked dates with minNights blocked dates
+  const allBlockedDates = useMemo(() => {
+    const original = props.blockedDates || [];
+    return [...original, ...blockedByMinNights];
+  }, [props.blockedDates, blockedByMinNights]);
 
   return (
     <div className="month-container">
@@ -81,8 +105,9 @@ const Months = (props: MonthProps) => {
 
           let currentLabel: string | null = null;
           let spanStart = -1;
+          let currentIsMinNights = false;
 
-          const addEventLabel = (startIdx: number, endIdx: number, label: string) => {
+          const addEventLabel = (startIdx: number, endIdx: number, label: string, isMinNights: boolean = false) => {
             const span = endIdx - startIdx + 1;
             const startCol = (startIdx % 7) + 1;
             const row = Math.floor(startIdx / 7) + 2; // +2 because: row 1 is weekday headers
@@ -90,7 +115,7 @@ const Months = (props: MonthProps) => {
             eventLabels.push(
               <div
                 key={`evt-${startIdx}-${label}`}
-                className="event-label"
+                className={`event-label${isMinNights ? ' min-nights' : ''}`}
                 style={{
                   gridColumn: `${startCol} / span ${span}`,
                   gridRow: row,
@@ -111,14 +136,15 @@ const Months = (props: MonthProps) => {
               
               // Flush any ongoing event label
               if (currentLabel !== null && spanStart >= 0) {
-                addEventLabel(spanStart, idx - 1, currentLabel);
+                addEventLabel(spanStart, idx - 1, currentLabel, currentIsMinNights);
                 currentLabel = null;
                 spanStart = -1;
+                currentIsMinNights = false;
               }
               return;
             }
 
-            const dayState = getDateState(date, props.date, props.blockedDates, props.allowPastDates, props.allowSameDay);
+            const dayState = getDateState(date, props.date, allBlockedDates, props.allowPastDates, props.allowSameDay);
             const info = getDayInfo(date, dayInfoMap);
             cells.push(
               <Dates
@@ -127,18 +153,23 @@ const Months = (props: MonthProps) => {
                 dayState={dayState}
                 label={null}
                 dayInfo={info}
-                onClick={(d) => props.setDate((prev) => nextSelectionOnClick(prev, d, props.blockedDates, props.allowPastDates, props.allowSameDay, props.minNights))}
+                onClick={(d) => props.setDate((prev) => nextSelectionOnClick(prev, d, allBlockedDates, props.allowPastDates, props.allowSameDay, props.minNights))}
               />
             );
 
             // Handle event labels
             const label = props.showEvents !== false && !isBeforeToday(date, props.allowPastDates) ? getEventLabel(date, eventMap) : null;
             
+            // Check if this is a minNights event
+            const dateStr = formatDate(date);
+            const isMinNights = minNightsEventDates.has(dateStr);
+            
             if (isNewRow && currentLabel !== null && spanStart >= 0) {
               // Flush previous label at row boundary
-              addEventLabel(spanStart, idx - 1, currentLabel);
+              addEventLabel(spanStart, idx - 1, currentLabel, currentIsMinNights);
               currentLabel = null;
               spanStart = -1;
+              currentIsMinNights = false;
             }
 
             if (label) {
@@ -147,24 +178,26 @@ const Months = (props: MonthProps) => {
               } else {
                 // Start new label
                 if (currentLabel !== null && spanStart >= 0) {
-                  addEventLabel(spanStart, idx - 1, currentLabel);
+                  addEventLabel(spanStart, idx - 1, currentLabel, currentIsMinNights);
                 }
                 currentLabel = label;
                 spanStart = idx;
+                currentIsMinNights = isMinNights;
               }
             } else {
               // No label for this date
               if (currentLabel !== null && spanStart >= 0) {
-                addEventLabel(spanStart, idx - 1, currentLabel);
+                addEventLabel(spanStart, idx - 1, currentLabel, currentIsMinNights);
                 currentLabel = null;
                 spanStart = -1;
+                currentIsMinNights = false;
               }
             }
           });
 
           // Flush any remaining label
           if (currentLabel !== null && spanStart >= 0) {
-            addEventLabel(spanStart, dates.length - 1, currentLabel);
+            addEventLabel(spanStart, dates.length - 1, currentLabel, currentIsMinNights);
           }
 
           return [...eventLabels, ...cells];

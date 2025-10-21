@@ -91,6 +91,12 @@
   border-radius: 3px;
 }
 
+/* Black background for minimum nights restriction labels */
+.event-label.min-nights {
+  background: #000;
+  color: #fff;
+}
+
 /* Mobile-specific: no shadows, better padding */
 @media (max-width: 768px) {
   .event-label {
