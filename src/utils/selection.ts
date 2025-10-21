@@ -8,7 +8,8 @@ const startOfDay = (d: Date) => {
 
 const compare = (a: Date, b: Date) => startOfDay(a).getTime() - startOfDay(b).getTime();
 
-export const isBeforeToday = (d: Date) => {
+export const isBeforeToday = (d: Date, allowPastDates?: boolean) => {
+  if (allowPastDates) return false;
   const today = startOfDay(new Date());
   return compare(d, today) < 0;
 };
@@ -47,11 +48,20 @@ export const hasBlockedDateInRange = (start: Date, end: Date, blockedDates?: Blo
 
 export type DayState = "blocked" | "checkin" | "checkout" | "inRange" | "default";
 
-export function getDateState(date: Date, selection: SelectDateType, blockedDates?: BlockedDates): DayState {
-  if (isBeforeToday(date) || isDateBlocked(date, blockedDates)) return "blocked";
+export function getDateState(
+  date: Date, 
+  selection: SelectDateType, 
+  blockedDates?: BlockedDates,
+  allowPastDates?: boolean,
+  allowSameDay?: boolean
+): DayState {
+  if (isBeforeToday(date, allowPastDates) || isDateBlocked(date, blockedDates)) return "blocked";
   const { checkin, checkout } = selection;
   if (checkin && compare(date, checkin) === 0) return "checkin";
-  if (checkout && compare(date, checkout) === 0) return "checkout";
+  if (checkout && compare(date, checkout) === 0) {
+    // If same day check-in/checkout allowed and it's the same date, show as checkout
+    return "checkout";
+  }
   if (checkin && checkout && compare(date, checkin) > 0 && compare(date, checkout) < 0) return "inRange";
   return "default";
 }
@@ -59,11 +69,13 @@ export function getDateState(date: Date, selection: SelectDateType, blockedDates
 export function nextSelectionOnClick(
   selection: SelectDateType, 
   clicked: Date, 
-  blockedDates?: BlockedDates
+  blockedDates?: BlockedDates,
+  allowPastDates?: boolean,
+  allowSameDay?: boolean
 ): SelectDateType {
   const day = startOfDay(clicked);
   // Ignore blocked days
-  if (isBeforeToday(day) || isDateBlocked(day, blockedDates)) return selection;
+  if (isBeforeToday(day, allowPastDates) || isDateBlocked(day, blockedDates)) return selection;
 
   const { checkin, checkout } = selection;
   // No selection yet -> set checkin
@@ -72,7 +84,19 @@ export function nextSelectionOnClick(
   }
   // Only checkin -> set checkout if after or equal; if before, move checkin
   if (checkin && !checkout) {
-    if (compare(day, checkin) >= 0) {
+    const comparison = compare(day, checkin);
+    
+    // Same day selection
+    if (comparison === 0) {
+      if (allowSameDay) {
+        return { checkin, checkout: day };
+      }
+      // If same day not allowed, do nothing
+      return selection;
+    }
+    
+    // After checkin
+    if (comparison > 0) {
       // Check if there are any blocked dates between checkin and clicked date
       if (hasBlockedDateInRange(checkin, day, blockedDates)) {
         // Can't select this as checkout, start new selection
@@ -80,6 +104,8 @@ export function nextSelectionOnClick(
       }
       return { checkin, checkout: day };
     }
+    
+    // Before checkin - move checkin
     return { checkin: day, checkout: null };
   }
   // Both set -> start new selection with new checkin

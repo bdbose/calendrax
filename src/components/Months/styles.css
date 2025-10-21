@@ -7,6 +7,7 @@
   font-family: sans-serif;
   position: relative;
   padding-top: 24px;
+  box-sizing: border-box;
 }
 
 /* Mobile-specific: no gaps for seamless look, responsive sizing */
@@ -53,6 +54,7 @@
   font-weight: 600;
   font-size: 14px;
   color: #666;
+  box-sizing: border-box;
 }
 
 /* Mobile week headers */
@@ -67,11 +69,11 @@
 
 .event-label {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
+  top: 2px;
+  left: 2px;
+  right: 2px;
   z-index: 5;
-  height: 24px;
+  height: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -79,13 +81,14 @@
   color: #c47a00;
   font-weight: 600;
   font-size: 11px;
-  padding: 4px 6px;
-  white-space: pre-line;
+  padding: 2px 4px;
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   pointer-events: none;
-  width: 100%;
   text-align: center;
+  box-sizing: border-box;
+  border-radius: 3px;
 }
 
 /* Mobile-specific: no shadows, better padding */
@@ -101,6 +104,7 @@
   width: 80px;
   height: 80px;
   background: #fafafa;
+  box-sizing: border-box;
 }
 
 /* Mobile filler dates */

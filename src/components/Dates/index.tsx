@@ -1,4 +1,5 @@
 import "./styles.css";
+import type { DayInfo } from "../../types/type";
 
 type DateProps = {
   date: Date;
@@ -6,6 +7,7 @@ type DateProps = {
   onClick?: (date: Date) => void;
   label?: string | null;
   labelSpan?: number; // number of cells to span (only on the first cell)
+  dayInfo?: DayInfo | null;
 };
 
 const Dates = (props: DateProps) => {
@@ -26,7 +28,18 @@ const Dates = (props: DateProps) => {
           {props.label}
         </div>
       ) : null}
-      {new Date(props.date).getDate()}
+      <div className="date-number">{new Date(props.date).getDate()}</div>
+      {props.dayInfo && (
+        <div
+          className="day-info"
+          style={{
+            color: props.dayInfo.textColor,
+            backgroundColor: props.dayInfo.backgroundColor,
+          }}
+        >
+          {props.dayInfo.text}
+        </div>
+      )}
     </div>
   );
 };

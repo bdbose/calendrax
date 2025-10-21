@@ -2,7 +2,7 @@ import { useState } from "react";
 import "./App.css";
 import Months from "./components/Months";
 import { DatePicker } from "./index";
-import type { SelectDateType, CalendarEvent } from "./types/type";
+import type { SelectDateType, CalendarEvent, DayInfo } from "./types/type";
 
 type CalendraxProps = {
   dates: SelectDateType;
@@ -42,6 +42,18 @@ function App(props: CalendraxProps) {
     "2025-11-11",
   ];
 
+  // Example day info - display prices or other info below dates
+  const dayInfoData: DayInfo[] = [
+    { date: "2025-10-22", text: "$150", textColor: "#0066cc", backgroundColor: "#e6f2ff" },
+    { date: "2025-10-23", text: "$180", textColor: "#0066cc", backgroundColor: "#e6f2ff" },
+    { date: "2025-10-24", text: "$200", textColor: "#cc0000", backgroundColor: "#ffe6e6" },
+    { date: "2025-10-25", text: "$180", textColor: "#0066cc", backgroundColor: "#e6f2ff" },
+    { date: "2025-10-26", text: "$160", textColor: "#0066cc", backgroundColor: "#e6f2ff" },
+    { date: "2025-10-27", text: "$140", textColor: "#0066cc", backgroundColor: "#e6f2ff" },
+    { date: "2025-10-31", text: "$220", textColor: "#cc0000", backgroundColor: "#ffe6e6" },
+    { date: "2025-11-01", text: "$190", textColor: "#0066cc", backgroundColor: "#e6f2ff" },
+  ];
+
 
 
   if (props.open) {
@@ -55,13 +67,16 @@ function App(props: CalendraxProps) {
         setDates={setDates}
         open={true}
         setOpen={setOpen}
-        mobile={true}
+        mobile={false}
         events={events}
         showEvents={true}
         blockedDates={blockedDates}
+        allowPastDates={false}
+        allowSameDay={true}
+        dayInfo={dayInfoData}
         startMonth={today.getMonth() + 1}
         startYear={today.getFullYear()}
-        // count={2}
+        count={1}
       >
        
       </DatePicker>

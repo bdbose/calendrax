@@ -16,3 +16,10 @@ export type CalendarEvent = {
 };
 
 export type BlockedDates = string[]; // Array of dates in 'YYYY-MM-DD' format
+
+export type DayInfo = {
+  date: string; // YYYY-MM-DD
+  text: string; // Text to display below the date
+  textColor?: string; // Optional text color (default: inherit)
+  backgroundColor?: string; // Optional background color for the info badge
+};

@@ -2,7 +2,7 @@ export { default as Months } from "./components/Months";
 export { default as Dates } from "./components/Dates";
 export { generateCalendarDatesTrimmed } from "./utils/generateMonth";
 
-export type { SelectDateType, MonthArrType, CalendarEvent } from "./types/type";
+export type { SelectDateType, MonthArrType, CalendarEvent, DayInfo, BlockedDates } from "./types/type";
 export { default as MonthView } from "./components/MonthView";
 export { default as DesktopMonths } from "./components/Months/DesktopMonths";
 export { default as MobileMonths } from "./components/Months/MobileMonths";

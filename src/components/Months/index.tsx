@@ -2,9 +2,10 @@ import { useEffect, useState, useMemo } from "react";
 import "./styles.css";
 import { generateCalendarDatesTrimmed } from "../../utils/generateMonth";
 import Dates from "../Dates";
-import type { SelectDateType, BlockedDates } from "../../types/type";
+import type { SelectDateType, BlockedDates, DayInfo } from "../../types/type";
 import { getDateState, nextSelectionOnClick, isBeforeToday } from "../../utils/selection";
 import { buildEventMap, getEventLabel } from "../../utils/events";
+import { buildDayInfoMap, getDayInfo } from "../../utils/dayInfo";
 
 const week = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
 const months = [
@@ -31,6 +32,9 @@ type MonthProps = {
   onChange?: (selection: SelectDateType) => void;
   showEvents?: boolean;
   blockedDates?: BlockedDates;
+  allowPastDates?: boolean;
+  allowSameDay?: boolean;
+  dayInfo?: DayInfo[];
 };
 
 const Months = (props: MonthProps) => {
@@ -46,6 +50,7 @@ const Months = (props: MonthProps) => {
   }, [props.date]);
 
   const eventMap = useMemo(() => (props.events ? buildEventMap(props.events) : undefined), [props.events]);
+  const dayInfoMap = useMemo(() => buildDayInfoMap(props.dayInfo), [props.dayInfo]);
 
   return (
     <div className="month-container">
@@ -104,19 +109,21 @@ const Months = (props: MonthProps) => {
               return;
             }
 
-            const dayState = getDateState(date, props.date, props.blockedDates);
+            const dayState = getDateState(date, props.date, props.blockedDates, props.allowPastDates, props.allowSameDay);
+            const info = getDayInfo(date, dayInfoMap);
             cells.push(
               <Dates
                 key={date.toISOString()}
                 date={date}
                 dayState={dayState}
                 label={null}
-                onClick={(d) => props.setDate((prev) => nextSelectionOnClick(prev, d, props.blockedDates))}
+                dayInfo={info}
+                onClick={(d) => props.setDate((prev) => nextSelectionOnClick(prev, d, props.blockedDates, props.allowPastDates, props.allowSameDay))}
               />
             );
 
             // Handle event labels
-            const label = props.showEvents !== false && !isBeforeToday(date) ? getEventLabel(date, eventMap) : null;
+            const label = props.showEvents !== false && !isBeforeToday(date, props.allowPastDates) ? getEventLabel(date, eventMap) : null;
             
             if (isNewRow && currentLabel !== null && spanStart >= 0) {
               // Flush previous label at row boundary

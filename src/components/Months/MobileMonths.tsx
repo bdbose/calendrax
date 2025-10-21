@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import "./styles.css";
 import Months from ".";
-import type { SelectDateType, BlockedDates } from "../../types/type";
+import type { SelectDateType, BlockedDates, DayInfo } from "../../types/type";
 
 type MobileMonthsProps = {
   startMonth?: number; // 1-12
@@ -13,6 +13,9 @@ type MobileMonthsProps = {
   onChange?: (selection: SelectDateType) => void;
   showEvents?: boolean;
   blockedDates?: BlockedDates;
+  allowPastDates?: boolean;
+  allowSameDay?: boolean;
+  dayInfo?: DayInfo[];
 };
 
 const MobileMonths = (props: MobileMonthsProps) => {
@@ -109,6 +112,9 @@ const MobileMonths = (props: MobileMonthsProps) => {
             onChange={props.onChange}
             showEvents={props.showEvents}
             blockedDates={props.blockedDates}
+            allowPastDates={props.allowPastDates}
+            allowSameDay={props.allowSameDay}
+            dayInfo={props.dayInfo}
           />
         );
       })}

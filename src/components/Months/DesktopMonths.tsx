@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import "./styles.css";
 import Months from ".";
-import type { SelectDateType, BlockedDates } from "../../types/type";
+import type { SelectDateType, BlockedDates, DayInfo } from "../../types/type";
 
 type DesktopMonthsProps = {
   startMonth?: number; // 1-12
@@ -11,6 +11,9 @@ type DesktopMonthsProps = {
   onChange?: (selection: SelectDateType) => void;
   showEvents?: boolean;
   blockedDates?: BlockedDates;
+  allowPastDates?: boolean;
+  allowSameDay?: boolean;
+  dayInfo?: DayInfo[];
 };
 
 const clampMonth = (month: number) => {
@@ -68,6 +71,9 @@ const DesktopMonths = (props: DesktopMonthsProps) => {
             onChange={props.onChange}
             showEvents={props.showEvents}
             blockedDates={props.blockedDates}
+            allowPastDates={props.allowPastDates}
+            allowSameDay={props.allowSameDay}
+            dayInfo={props.dayInfo}
           />
         ))}
       </div>
