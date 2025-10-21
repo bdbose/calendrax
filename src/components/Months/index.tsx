@@ -2,10 +2,11 @@ import { useEffect, useState, useMemo } from "react";
 import "./styles.css";
 import { generateCalendarDatesTrimmed } from "../../utils/generateMonth";
 import Dates from "../Dates";
-import type { SelectDateType, BlockedDates, DayInfo } from "../../types/type";
+import type { SelectDateType, BlockedDates, DayInfo, MinNights } from "../../types/type";
 import { getDateState, nextSelectionOnClick, isBeforeToday } from "../../utils/selection";
 import { buildEventMap, getEventLabel } from "../../utils/events";
 import { buildDayInfoMap, getDayInfo } from "../../utils/dayInfo";
+import { generateMinNightsEvents } from "../../utils/minNights";
 
 const week = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
 const months = [
@@ -35,6 +36,7 @@ type MonthProps = {
   allowPastDates?: boolean;
   allowSameDay?: boolean;
   dayInfo?: DayInfo[];
+  minNights?: MinNights;
 };
 
 const Months = (props: MonthProps) => {
@@ -49,7 +51,14 @@ const Months = (props: MonthProps) => {
     props.onChange?.(props.date);
   }, [props.date]);
 
-  const eventMap = useMemo(() => (props.events ? buildEventMap(props.events) : undefined), [props.events]);
+  // Merge user events with auto-generated minimum nights events
+  const allEvents = useMemo(() => {
+    const minNightsEvents = generateMinNightsEvents(props.minNights);
+    const userEvents = props.events || [];
+    return [...minNightsEvents, ...userEvents];
+  }, [props.events, props.minNights]);
+
+  const eventMap = useMemo(() => buildEventMap(allEvents), [allEvents]);
   const dayInfoMap = useMemo(() => buildDayInfoMap(props.dayInfo), [props.dayInfo]);
 
   return (
@@ -118,7 +127,7 @@ const Months = (props: MonthProps) => {
                 dayState={dayState}
                 label={null}
                 dayInfo={info}
-                onClick={(d) => props.setDate((prev) => nextSelectionOnClick(prev, d, props.blockedDates, props.allowPastDates, props.allowSameDay))}
+                onClick={(d) => props.setDate((prev) => nextSelectionOnClick(prev, d, props.blockedDates, props.allowPastDates, props.allowSameDay, props.minNights))}
               />
             );
 

@@ -2,7 +2,7 @@ import { useState } from "react";
 import "./App.css";
 import Months from "./components/Months";
 import { DatePicker } from "./index";
-import type { SelectDateType, CalendarEvent, DayInfo } from "./types/type";
+import type { SelectDateType, CalendarEvent, DayInfo, MinNights } from "./types/type";
 
 type CalendraxProps = {
   dates: SelectDateType;
@@ -54,6 +54,13 @@ function App(props: CalendraxProps) {
     { date: "2025-11-01", text: "$190", textColor: "#0066cc", backgroundColor: "#e6f2ff" },
   ];
 
+  // Example minimum nights restrictions
+  const minNightsRestrictions: MinNights = {
+    "2025-10-24": 3,  // Oct 24 requires minimum 3 nights
+    "2025-10-31": 2,  // Oct 31 requires minimum 2 nights
+    "2025-11-01": 2,  // Nov 1 requires minimum 2 nights
+  };
+
 
 
   if (props.open) {
@@ -74,6 +81,7 @@ function App(props: CalendraxProps) {
         allowPastDates={false}
         allowSameDay={true}
         dayInfo={dayInfoData}
+        minNights={minNightsRestrictions}
         startMonth={today.getMonth() + 1}
         startYear={today.getFullYear()}
         count={1}

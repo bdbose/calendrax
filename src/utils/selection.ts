@@ -1,4 +1,6 @@
-import type { SelectDateType, BlockedDates } from "../types/type";
+import type { SelectDateType, BlockedDates, MinNights } from "../types/type";
+import { meetsMinNights } from "./minNights";
+import { formatDate } from "./dateHelpers";
 
 const startOfDay = (d: Date) => {
   const x = new Date(d);
@@ -14,13 +16,8 @@ export const isBeforeToday = (d: Date, allowPastDates?: boolean) => {
   return compare(d, today) < 0;
 };
 
-// Helper to convert Date to 'YYYY-MM-DD' format
-export const formatDate = (date: Date): string => {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
-};
+// Re-export for backwards compatibility
+export { formatDate };
 
 // Check if a date is in the blocked dates list
 export const isDateBlocked = (date: Date, blockedDates?: BlockedDates): boolean => {
@@ -71,7 +68,8 @@ export function nextSelectionOnClick(
   clicked: Date, 
   blockedDates?: BlockedDates,
   allowPastDates?: boolean,
-  allowSameDay?: boolean
+  allowSameDay?: boolean,
+  minNights?: MinNights
 ): SelectDateType {
   const day = startOfDay(clicked);
   // Ignore blocked days
@@ -89,7 +87,13 @@ export function nextSelectionOnClick(
     // Same day selection
     if (comparison === 0) {
       if (allowSameDay) {
-        return { checkin, checkout: day };
+        // Check minimum nights for same-day
+        const potentialSelection = { checkin, checkout: day };
+        if (meetsMinNights(checkin, day, minNights)) {
+          return potentialSelection;
+        }
+        // Doesn't meet minimum nights, keep selection
+        return selection;
       }
       // If same day not allowed, do nothing
       return selection;
@@ -102,6 +106,13 @@ export function nextSelectionOnClick(
         // Can't select this as checkout, start new selection
         return { checkin: day, checkout: null };
       }
+      
+      // Check minimum nights requirement
+      if (!meetsMinNights(checkin, day, minNights)) {
+        // Doesn't meet minimum nights, keep current selection
+        return selection;
+      }
+      
       return { checkin, checkout: day };
     }
     

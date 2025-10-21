@@ -23,3 +23,7 @@ export type DayInfo = {
   textColor?: string; // Optional text color (default: inherit)
   backgroundColor?: string; // Optional background color for the info badge
 };
+
+export type MinNights = {
+  [date: string]: number; // Key: 'YYYY-MM-DD', Value: minimum nights required
+};
