@@ -2,7 +2,7 @@ import { useEffect, useState, useMemo } from "react";
 import "./styles.css";
 import { generateCalendarDatesTrimmed } from "../../utils/generateMonth";
 import Dates from "../Dates";
-import type { SelectDateType } from "../../types/type";
+import type { SelectDateType, BlockedDates } from "../../types/type";
 import { getDateState, nextSelectionOnClick, isBeforeToday } from "../../utils/selection";
 import { buildEventMap, getEventLabel } from "../../utils/events";
 
@@ -30,6 +30,7 @@ type MonthProps = {
   events?: { start_date: string; end_date: string; name: string; specific_teams?: string }[];
   onChange?: (selection: SelectDateType) => void;
   showEvents?: boolean;
+  blockedDates?: BlockedDates;
 };
 
 const Months = (props: MonthProps) => {
@@ -103,14 +104,14 @@ const Months = (props: MonthProps) => {
               return;
             }
 
-            const dayState = getDateState(date, props.date);
+            const dayState = getDateState(date, props.date, props.blockedDates);
             cells.push(
               <Dates
                 key={date.toISOString()}
                 date={date}
                 dayState={dayState}
                 label={null}
-                onClick={(d) => props.setDate((prev) => nextSelectionOnClick(prev, d))}
+                onClick={(d) => props.setDate((prev) => nextSelectionOnClick(prev, d, props.blockedDates))}
               />
             );
 

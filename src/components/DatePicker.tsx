@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import DesktopMonths from "./Months/DesktopMonths";
 import MobileMonths from "./Months/MobileMonths";
-import type { CalendarEvent, SelectDateType } from "../types/type";
+import type { CalendarEvent, SelectDateType, BlockedDates } from "../types/type";
 
 type DatePickerProps = {
   dates: SelectDateType;
@@ -11,6 +11,7 @@ type DatePickerProps = {
   mobile?: boolean;
   events?: CalendarEvent[];
   showEvents?: boolean;
+  blockedDates?: BlockedDates;
   startMonth?: number;
   startYear?: number;
   count?: number;
@@ -37,6 +38,7 @@ const DatePicker = (props: DatePickerProps) => {
       count={props.count}
       events={props.events}
       showEvents={props.showEvents}
+      blockedDates={props.blockedDates}
       onChange={props.setDates}
     />
 
@@ -58,6 +60,7 @@ const DatePicker = (props: DatePickerProps) => {
       count={props.count}
       events={props.events}
       showEvents={props.showEvents}
+      blockedDates={props.blockedDates}
       onChange={props.setDates}
     />
     </div>

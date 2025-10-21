@@ -1,4 +1,4 @@
-import type { SelectDateType } from "../types/type";
+import type { SelectDateType, BlockedDates } from "../types/type";
 
 const startOfDay = (d: Date) => {
   const x = new Date(d);
@@ -13,10 +13,42 @@ export const isBeforeToday = (d: Date) => {
   return compare(d, today) < 0;
 };
 
+// Helper to convert Date to 'YYYY-MM-DD' format
+export const formatDate = (date: Date): string => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
+// Check if a date is in the blocked dates list
+export const isDateBlocked = (date: Date, blockedDates?: BlockedDates): boolean => {
+  if (!blockedDates || blockedDates.length === 0) return false;
+  const dateStr = formatDate(date);
+  return blockedDates.includes(dateStr);
+};
+
+// Check if any blocked dates exist in a date range (inclusive)
+export const hasBlockedDateInRange = (start: Date, end: Date, blockedDates?: BlockedDates): boolean => {
+  if (!blockedDates || blockedDates.length === 0) return false;
+  
+  const current = new Date(start);
+  const endTime = end.getTime();
+  
+  while (current.getTime() <= endTime) {
+    if (isDateBlocked(current, blockedDates)) {
+      return true;
+    }
+    current.setDate(current.getDate() + 1);
+  }
+  
+  return false;
+};
+
 export type DayState = "blocked" | "checkin" | "checkout" | "inRange" | "default";
 
-export function getDateState(date: Date, selection: SelectDateType): DayState {
-  if (isBeforeToday(date)) return "blocked";
+export function getDateState(date: Date, selection: SelectDateType, blockedDates?: BlockedDates): DayState {
+  if (isBeforeToday(date) || isDateBlocked(date, blockedDates)) return "blocked";
   const { checkin, checkout } = selection;
   if (checkin && compare(date, checkin) === 0) return "checkin";
   if (checkout && compare(date, checkout) === 0) return "checkout";
@@ -24,10 +56,14 @@ export function getDateState(date: Date, selection: SelectDateType): DayState {
   return "default";
 }
 
-export function nextSelectionOnClick(selection: SelectDateType, clicked: Date): SelectDateType {
+export function nextSelectionOnClick(
+  selection: SelectDateType, 
+  clicked: Date, 
+  blockedDates?: BlockedDates
+): SelectDateType {
   const day = startOfDay(clicked);
   // Ignore blocked days
-  if (isBeforeToday(day)) return selection;
+  if (isBeforeToday(day) || isDateBlocked(day, blockedDates)) return selection;
 
   const { checkin, checkout } = selection;
   // No selection yet -> set checkin
@@ -37,6 +73,11 @@ export function nextSelectionOnClick(selection: SelectDateType, clicked: Date): 
   // Only checkin -> set checkout if after or equal; if before, move checkin
   if (checkin && !checkout) {
     if (compare(day, checkin) >= 0) {
+      // Check if there are any blocked dates between checkin and clicked date
+      if (hasBlockedDateInRange(checkin, day, blockedDates)) {
+        // Can't select this as checkout, start new selection
+        return { checkin: day, checkout: null };
+      }
       return { checkin, checkout: day };
     }
     return { checkin: day, checkout: null };

@@ -14,3 +14,5 @@ export type CalendarEvent = {
   name: string;
   specific_teams?: string;
 };
+
+export type BlockedDates = string[]; // Array of dates in 'YYYY-MM-DD' format

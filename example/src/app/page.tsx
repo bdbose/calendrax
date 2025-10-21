@@ -31,6 +31,17 @@ export default function Home() {
     { start_date: "2026-10-02", end_date: "2026-10-04", name: "Gandhi Jayanti Weekend", specific_teams: "All Teams" }
   ]
 
+  // Example blocked dates - these dates cannot be selected
+  const blockedDates: string[] = [
+    "2025-10-28", // Blocked single date
+    "2025-10-29",
+    "2025-10-30",
+    "2025-11-10", // Blocked dates in November
+    "2025-11-11",
+    "2025-12-15", // Blocked dates in December
+    "2025-12-16",
+  ]
+
   return (
     <main>
       <div className="container">
@@ -38,7 +49,11 @@ export default function Home() {
         <p>A beautiful React calendar component with event support and date range selection</p>
 
         <div className="demo-section">
-          <h2>Desktop Calendar with Events</h2>
+          <h2>Desktop Calendar with Events & Blocked Dates</h2>
+          <p style={{ color: '#666', fontSize: '14px', marginBottom: '16px' }}>
+            Try selecting dates! Some dates are blocked (e.g., Oct 28-30, Nov 10-11, Dec 15-16). 
+            You cannot select a range that includes blocked dates.
+          </p>
           <div className="calendar-wrapper">
             <DatePicker
               dates={dates}
@@ -48,6 +63,7 @@ export default function Home() {
               mobile={false}
               events={events}
               showEvents={true}
+              blockedDates={blockedDates}
               startMonth={today.getMonth() + 1}
               startYear={today.getFullYear()}
             >
@@ -106,6 +122,13 @@ function App() {
     }
   ]
 
+  // Dates in 'YYYY-MM-DD' format that should be blocked
+  const blockedDates: string[] = [
+    "2025-10-28",
+    "2025-10-29",
+    "2025-11-10"
+  ]
+
   return (
     <DatePicker
       dates={dates}
@@ -114,6 +137,7 @@ function App() {
       setOpen={setOpen}
       events={events}
       showEvents={true}
+      blockedDates={blockedDates}
       mobile={false}
     />
   )

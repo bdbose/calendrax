@@ -9,6 +9,7 @@ A React/TypeScript calendar component library with event support and date range 
 
 ✨ **Date Range Selection** - Check-in and check-out date picking  
 📅 **Event Display** - Show events with custom styling and labels  
+🚫 **Blocked Dates** - Prevent selection of specific dates  
 📱 **Responsive Design** - Optimized for both mobile and desktop  
 🎨 **Customizable** - Flexible styling and configuration options  
 ⚡ **TypeScript** - Full TypeScript support with type definitions  
@@ -50,6 +51,13 @@ function App() {
     }
   ]
 
+  // Dates that cannot be selected (YYYY-MM-DD format)
+  const blockedDates: string[] = [
+    "2025-10-28",
+    "2025-10-29",
+    "2025-11-10"
+  ]
+
   return (
     <DatePicker
       dates={dates}
@@ -58,6 +66,7 @@ function App() {
       setOpen={setOpen}
       events={events}
       showEvents={true}
+      blockedDates={blockedDates}
       mobile={false}
       startMonth={new Date().getMonth() + 1}
       startYear={new Date().getFullYear()}
@@ -79,6 +88,7 @@ function App() {
 | `mobile` | `boolean` | No | Enable mobile view (default: `false`) |
 | `events` | `CalendarEvent[]` | No | Array of events to display |
 | `showEvents` | `boolean` | No | Show/hide events (default: `true`) |
+| `blockedDates` | `string[]` | No | Array of dates to block (YYYY-MM-DD format) |
 | `startMonth` | `number` | No | Starting month (1-12) |
 | `startYear` | `number` | No | Starting year |
 | `count` | `number` | No | Number of months to display (default: `2`) |
@@ -176,6 +186,50 @@ const events: CalendarEvent[] = [
   }
 ]
 ```
+
+## Blocked Dates
+
+You can prevent users from selecting specific dates by providing a `blockedDates` array. This is useful for:
+
+- **Maintenance periods** - Block dates when the service is unavailable
+- **Fully booked dates** - Prevent bookings on sold-out dates
+- **Holidays** - Restrict selection on non-working days
+- **Custom business rules** - Any date-specific restrictions
+
+### How It Works
+
+1. **Date Format**: Blocked dates must be in `YYYY-MM-DD` format
+2. **Click Prevention**: Users cannot click on blocked dates
+3. **Range Validation**: If a user selects a check-in date and tries to select a check-out date, the selection will fail if any blocked dates exist between them
+4. **Visual Feedback**: Blocked dates appear grayed out (same styling as past dates)
+
+### Blocked Dates Example
+
+```typescript
+const blockedDates: string[] = [
+  "2025-10-28",  // Single blocked date
+  "2025-10-29",
+  "2025-10-30",
+  "2025-11-10",  // Another blocked date
+  "2025-11-11",
+  "2025-12-25",  // Christmas - fully booked
+]
+
+<DatePicker
+  dates={dates}
+  setDates={setDates}
+  open={open}
+  setOpen={setOpen}
+  blockedDates={blockedDates}
+  // ... other props
+/>
+```
+
+### Blocked Dates Behavior
+
+- **Scenario 1**: User clicks a blocked date → Nothing happens
+- **Scenario 2**: User selects Oct 25 as check-in, then clicks Oct 31 as check-out, but Oct 28-30 are blocked → Selection resets to Oct 31 as new check-in
+- **Scenario 3**: User can select Oct 25 as check-in and Oct 27 as check-out (no blocked dates in between) → Selection succeeds
 
 ## Styling
 

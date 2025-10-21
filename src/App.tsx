@@ -33,6 +33,15 @@ function App(props: CalendraxProps) {
     { start_date: "2026-10-02", end_date: "2026-10-04", name: "Gandhi Jayanti Weekend", specific_teams: "All Teams" }
   ];
 
+  // Example blocked dates - these dates cannot be selected
+  const blockedDates: string[] = [
+    "2025-10-28",
+    "2025-10-29",
+    "2025-10-30",
+    "2025-11-10",
+    "2025-11-11",
+  ];
+
 
 
   if (props.open) {
@@ -49,6 +58,7 @@ function App(props: CalendraxProps) {
         mobile={true}
         events={events}
         showEvents={true}
+        blockedDates={blockedDates}
         startMonth={today.getMonth() + 1}
         startYear={today.getFullYear()}
         // count={2}

@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import "./styles.css";
 import Months from ".";
-import type { SelectDateType } from "../../types/type";
+import type { SelectDateType, BlockedDates } from "../../types/type";
 
 type MobileMonthsProps = {
   startMonth?: number; // 1-12
@@ -12,6 +12,7 @@ type MobileMonthsProps = {
   events?: { start_date: string; end_date: string; name: string; specific_teams?: string }[];
   onChange?: (selection: SelectDateType) => void;
   showEvents?: boolean;
+  blockedDates?: BlockedDates;
 };
 
 const MobileMonths = (props: MobileMonthsProps) => {
@@ -107,6 +108,7 @@ const MobileMonths = (props: MobileMonthsProps) => {
             events={props.events}
             onChange={props.onChange}
             showEvents={props.showEvents}
+            blockedDates={props.blockedDates}
           />
         );
       })}
