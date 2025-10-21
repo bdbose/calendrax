@@ -73,17 +73,11 @@ const Months = (props: MonthProps) => {
     return dates;
   }, [props.minNights, props.date.checkin, props.blockedDates]);
   
-  // Get dates blocked by minimum nights restriction
-  const blockedByMinNights = useMemo(() => 
+  // Get dates to strike through (blocked by minimum nights restriction)
+  const strikethroughDates = useMemo(() => 
     getBlockedDatesFromMinNights(props.date.checkin, props.minNights, props.blockedDates),
     [props.date.checkin, props.minNights, props.blockedDates]
   );
-  
-  // Combine original blocked dates with minNights blocked dates
-  const allBlockedDates = useMemo(() => {
-    const original = props.blockedDates || [];
-    return [...original, ...blockedByMinNights];
-  }, [props.blockedDates, blockedByMinNights]);
 
   return (
     <div className="month-container">
@@ -144,7 +138,7 @@ const Months = (props: MonthProps) => {
               return;
             }
 
-            const dayState = getDateState(date, props.date, allBlockedDates, props.allowPastDates, props.allowSameDay);
+            const dayState = getDateState(date, props.date, props.blockedDates, props.allowPastDates, props.allowSameDay, strikethroughDates);
             const info = getDayInfo(date, dayInfoMap);
             cells.push(
               <Dates
@@ -153,7 +147,7 @@ const Months = (props: MonthProps) => {
                 dayState={dayState}
                 label={null}
                 dayInfo={info}
-                onClick={(d) => props.setDate((prev) => nextSelectionOnClick(prev, d, allBlockedDates, props.allowPastDates, props.allowSameDay, props.minNights))}
+                onClick={(d) => props.setDate((prev) => nextSelectionOnClick(prev, d, props.blockedDates, props.allowPastDates, props.allowSameDay, props.minNights, strikethroughDates))}
               />
             );
 

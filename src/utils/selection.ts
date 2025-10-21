@@ -43,16 +43,24 @@ export const hasBlockedDateInRange = (start: Date, end: Date, blockedDates?: Blo
   return false;
 };
 
-export type DayState = "blocked" | "checkin" | "checkout" | "inRange" | "default";
+export type DayState = "blocked" | "checkin" | "checkout" | "inRange" | "strikethrough" | "default";
 
 export function getDateState(
   date: Date, 
   selection: SelectDateType, 
   blockedDates?: BlockedDates,
   allowPastDates?: boolean,
-  allowSameDay?: boolean
+  allowSameDay?: boolean,
+  strikethroughDates?: string[]
 ): DayState {
   if (isBeforeToday(date, allowPastDates) || isDateBlocked(date, blockedDates)) return "blocked";
+  
+  // Check if this date should be struck through (can't select as checkout but can click through)
+  if (strikethroughDates && strikethroughDates.length > 0) {
+    const dateStr = formatDate(date);
+    if (strikethroughDates.includes(dateStr)) return "strikethrough";
+  }
+  
   const { checkin, checkout } = selection;
   if (checkin && compare(date, checkin) === 0) return "checkin";
   if (checkout && compare(date, checkout) === 0) {
@@ -69,13 +77,23 @@ export function nextSelectionOnClick(
   blockedDates?: BlockedDates,
   allowPastDates?: boolean,
   allowSameDay?: boolean,
-  minNights?: MinNights
+  minNights?: MinNights,
+  strikethroughDates?: string[]
 ): SelectDateType {
   const day = startOfDay(clicked);
   // Ignore blocked days
   if (isBeforeToday(day, allowPastDates) || isDateBlocked(day, blockedDates)) return selection;
 
   const { checkin, checkout } = selection;
+  
+  // If clicking a strikethrough date when we have check-in but no checkout, ignore it
+  if (strikethroughDates && strikethroughDates.length > 0 && checkin && !checkout) {
+    const dateStr = formatDate(day);
+    if (strikethroughDates.includes(dateStr)) {
+      // Can't select strikethrough date as checkout
+      return selection;
+    }
+  }
   // No selection yet -> set checkin
   if (!checkin && !checkout) {
     return { checkin: day, checkout: null };

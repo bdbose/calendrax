@@ -3,7 +3,7 @@ import type { DayInfo } from "../../types/type";
 
 type DateProps = {
   date: Date;
-  dayState: "blocked" | "checkin" | "checkout" | "inRange" | "default";
+  dayState: "blocked" | "checkin" | "checkout" | "inRange" | "strikethrough" | "default";
   onClick?: (date: Date) => void;
   label?: string | null;
   labelSpan?: number; // number of cells to span (only on the first cell)
@@ -13,6 +13,7 @@ type DateProps = {
 const Dates = (props: DateProps) => {
   const className = `day-wrapper ${props.dayState}`;
   const handleClick = () => {
+    // Blocked dates can't be clicked, strikethrough dates can be clicked through
     if (props.dayState === "blocked") return;
     props.onClick?.(props.date);
   };

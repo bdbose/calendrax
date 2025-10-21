@@ -45,12 +45,42 @@
   .day-wrapper.blocked {
     background: transparent;
   }
+  
+  .day-wrapper.strikethrough {
+    background: transparent;
+  }
+
+  .day-wrapper.strikethrough::before {
+    width: 60%;
+  }
 }
 
 .day-wrapper.blocked {
   color: #ccc;
   background: #fafafa;
   pointer-events: none;
+}
+
+.day-wrapper.strikethrough {
+  position: relative;
+  color: #999;
+  cursor: pointer;
+}
+
+.day-wrapper.strikethrough::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 70%;
+  height: 2px;
+  background: #ff4444;
+  z-index: 2;
+}
+
+.day-wrapper.strikethrough:hover {
+  background: #f5f5f5;
 }
 
 .day-wrapper.checkin,
