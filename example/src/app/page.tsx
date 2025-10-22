@@ -122,6 +122,7 @@ export default function Home() {
              count={1}
               startMonth={today.getMonth() + 1}
               startYear={today.getFullYear()}
+              calendarType={"hotel"}
             >
               <button 
                 className="trigger-btn"
