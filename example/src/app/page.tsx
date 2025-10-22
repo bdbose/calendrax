@@ -493,6 +493,7 @@ function App() {
           padding: 24px;
           background: #fafafa;
           border-radius: 8px;
+          position: relative;
         }
 
         .mobile-container {
@@ -501,6 +502,7 @@ function App() {
           padding: 20px;
           background: #fafafa;
           border-radius: 8px;
+          position: relative;
         }
 
         .trigger-btn {
