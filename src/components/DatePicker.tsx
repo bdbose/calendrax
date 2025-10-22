@@ -21,6 +21,8 @@ type DatePickerProps = {
   count?: number;
   cellWidth?: number; // Width of each date cell in pixels (default: 80, only for desktop)
   cellHeight?: number; // Height of each date cell in pixels (default: 80, only for desktop)
+  top?: number; // Top position offset in pixels (default: 0)
+  left?: number; // Left position offset in pixels (default: 0)
   children?: React.ReactNode; // trigger
 };
 
@@ -28,13 +30,20 @@ const DatePicker = (props: DatePickerProps) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [coords, setCoords] = useState<{ top: number; left: number }>({ top: 0, left: 0 });
 
+  // Get top and left with defaults
+  const topOffset = props.top ?? 0;
+  const leftOffset = props.left ?? 0;
+
   useEffect(() => {
     if (!props.open) return;
     const el = containerRef.current;
     if (!el) return;
     const rect = el.getBoundingClientRect();
-    setCoords({ top: rect.bottom + window.scrollY + 8, left: rect.left + window.scrollX });
-  }, [props.open]);
+    setCoords({ 
+      top: rect.bottom + window.scrollY + 8 + topOffset, 
+      left: rect.left + window.scrollX + leftOffset 
+    });
+  }, [props.open, topOffset, leftOffset]);
 
   const content = props.mobile ? (
    

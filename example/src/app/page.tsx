@@ -104,15 +104,7 @@ export default function Home() {
           </div>
           
           <div className="calendar-wrapper">
-            <button 
-              className="trigger-btn"
-              onClick={() => setHotelOpen(!hotelOpen)}
-            >
-              {hotelDates.checkin 
-                ? `${hotelDates.checkin.toLocaleDateString()} → ${hotelDates.checkout?.toLocaleDateString() || 'Select checkout'}`
-                : 'Select Hotel Dates'}
-            </button>
-
+           
             <DatePicker
               dates={hotelDates}
               setDates={setHotelDates}
@@ -131,7 +123,17 @@ export default function Home() {
               count={2}
               startMonth={today.getMonth() + 1}
               startYear={today.getFullYear()}
-            />
+            >
+               <button 
+              className="trigger-btn"
+              onClick={() => setHotelOpen(!hotelOpen)}
+            >
+              {hotelDates.checkin 
+                ? `${hotelDates.checkin.toLocaleDateString()} → ${hotelDates.checkout?.toLocaleDateString() || 'Select checkout'}`
+                : 'Select Hotel Dates'}
+            </button>
+
+            </DatePicker>
           </div>
 
           {hotelDates.checkin && (
