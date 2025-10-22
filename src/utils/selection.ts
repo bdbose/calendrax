@@ -90,7 +90,16 @@ export function getDateState(
   const { checkin, checkout } = selection;
   const dateIsBlocked = isDateBlocked(date, blockedDates);
   
-  // Hotel mode: special logic when checkin is selected
+  // Check for checkin/checkout FIRST (before blocking logic)
+  // This ensures selected dates show correct styling even if blocked
+  if (checkin && compare(date, checkin) === 0) return "checkin";
+  if (checkout && compare(date, checkout) === 0) {
+    // If same day check-in/checkout allowed and it's the same date, show as checkout
+    return "checkout";
+  }
+  if (checkin && checkout && compare(date, checkin) > 0 && compare(date, checkout) < 0) return "inRange";
+  
+  // Hotel mode: special logic when checkin is selected (but no checkout yet)
   if (isHotelMode && checkin && !checkout) {
     // Find first blocked date after checkin
     const firstBlockedAfterCheckin = findFirstBlockedDateAfter(checkin, blockedDates);
@@ -121,12 +130,6 @@ export function getDateState(
     if (strikethroughDates.includes(dateStr)) return "strikethrough";
   }
   
-  if (checkin && compare(date, checkin) === 0) return "checkin";
-  if (checkout && compare(date, checkout) === 0) {
-    // If same day check-in/checkout allowed and it's the same date, show as checkout
-    return "checkout";
-  }
-  if (checkin && checkout && compare(date, checkin) > 0 && compare(date, checkout) < 0) return "inRange";
   return "default";
 }
 
