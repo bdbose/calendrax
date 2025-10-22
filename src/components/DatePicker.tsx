@@ -61,18 +61,7 @@ const DatePicker = (props: DatePickerProps) => {
       onChange={props.setDates}
     />
 
-  ) : ( <div
-          style={{
-            position: "absolute",
-            top: coords.top,
-            left: coords.left,
-            zIndex: 1000,
-            background: "#fff",
-            boxShadow: "0 6px 22px rgba(0,0,0,0.15)",
-            borderRadius: 8,
-            padding: 8,
-          }}
-        >
+  ) : (
     <DesktopMonths
       startMonth={props.startMonth}
       startYear={props.startYear}
@@ -88,27 +77,26 @@ const DatePicker = (props: DatePickerProps) => {
       cellHeight={props.cellHeight}
       onChange={props.setDates}
     />
-    </div>
   );
 
   return (
-    <div ref={containerRef} style={{ display: "inline-block", position: "relative",width:"100%" }}>
+    <div ref={containerRef} style={{ display: "inline-block", position: "relative", width: "100%" }}>
       {props.children}
       {props.open ? (
-        // <div
-        //   style={{
-        //     position: "absolute",
-        //     top: coords.top,
-        //     left: coords.left,
-        //     zIndex: 1000,
-        //     background: "#fff",
-        //     boxShadow: props.mobile ? "none" : "0 6px 22px rgba(0,0,0,0.15)",
-        //     borderRadius: props.mobile ? 0 : 8,
-        //     padding: props.mobile ? 0 : 8,
-        //   }}
-        // >
-          content
-        // </div>
+        <div
+          style={{
+            position: "absolute",
+            top: coords.top,
+            left: coords.left,
+            zIndex: 1000,
+            background: "#fff",
+            boxShadow: props.mobile ? "none" : "0 6px 22px rgba(0,0,0,0.15)",
+            borderRadius: props.mobile ? 0 : 8,
+            padding: props.mobile ? 0 : 8,
+          }}
+        >
+          {content}
+        </div>
       ) : null}
     </div>
   );
