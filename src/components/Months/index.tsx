@@ -38,6 +38,12 @@ type MonthProps = {
   allowSameDay?: boolean;
   dayInfo?: DayInfo[];
   minNights?: MinNights;
+  cellWidth?: number;
+  cellHeight?: number;
+  showLeftArrow?: boolean;
+  showRightArrow?: boolean;
+  onPrevMonth?: () => void;
+  onNextMonth?: () => void;
 };
 
 const Months = (props: MonthProps) => {
@@ -79,15 +85,42 @@ const Months = (props: MonthProps) => {
     [props.date.checkin, props.minNights, props.blockedDates]
   );
 
+  const cellWidth = props.cellWidth ?? 80;
+  const cellHeight = props.cellHeight ?? 80;
+  const gap = 2; // Gap between cells
+
   return (
     <div className="month-container">
-      <span className="month-name-wrapper">
-        {months[props.month-1]} {props.year}
-      </span>
-      <div className="month-wrapper">
+      <div className="month-header-wrapper">
+        {props.showLeftArrow && (
+          <button className="month-nav-arrow left" onClick={props.onPrevMonth}>
+            ←
+          </button>
+        )}
+        <span className="month-name-wrapper">
+          {months[props.month-1]} {props.year}
+        </span>
+        {props.showRightArrow && (
+          <button className="month-nav-arrow right" onClick={props.onNextMonth}>
+            →
+          </button>
+        )}
+      </div>
+      <div 
+        className="month-wrapper"
+        style={{
+          gridTemplateColumns: `repeat(7, ${cellWidth}px)`,
+          gridAutoRows: `${cellHeight}px`,
+          gap: `${gap}px`,
+        }}
+      >
         {week.map((e) => {
           return (
-            <div className="week-wrapper" key={`wk-${e}`}>
+            <div 
+              className="week-wrapper" 
+              key={`wk-${e}`}
+              style={{ width: `${cellWidth}px` }}
+            >
               {e}
             </div>
           );
@@ -126,7 +159,13 @@ const Months = (props: MonthProps) => {
 
             // Build cells
             if (!date) {
-              cells.push(<div className="filler-date" key={`f-${idx}`}></div>);
+              cells.push(
+                <div 
+                  className="filler-date" 
+                  key={`f-${idx}`}
+                  style={{ width: `${cellWidth}px`, height: `${cellHeight}px` }}
+                ></div>
+              );
               
               // Flush any ongoing event label
               if (currentLabel !== null && spanStart >= 0) {
@@ -147,6 +186,8 @@ const Months = (props: MonthProps) => {
                 dayState={dayState}
                 label={null}
                 dayInfo={info}
+                cellWidth={cellWidth}
+                cellHeight={cellHeight}
                 onClick={(d) => props.setDate((prev) => nextSelectionOnClick(prev, d, props.blockedDates, props.allowPastDates, props.allowSameDay, props.minNights, strikethroughDates))}
               />
             );

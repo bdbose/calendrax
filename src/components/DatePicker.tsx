@@ -19,6 +19,8 @@ type DatePickerProps = {
   startMonth?: number;
   startYear?: number;
   count?: number;
+  cellWidth?: number; // Width of each date cell in pixels (default: 80, only for desktop)
+  cellHeight?: number; // Height of each date cell in pixels (default: 80, only for desktop)
   children?: React.ReactNode; // trigger
 };
 
@@ -73,6 +75,8 @@ const DatePicker = (props: DatePickerProps) => {
       allowSameDay={props.allowSameDay}
       dayInfo={props.dayInfo}
       minNights={props.minNights}
+      cellWidth={props.cellWidth}
+      cellHeight={props.cellHeight}
       onChange={props.setDates}
     />
     </div>

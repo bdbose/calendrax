@@ -72,7 +72,7 @@ function App(props: CalendraxProps) {
       <DatePicker
         dates={dates}
         setDates={setDates}
-        open={true}
+        open={open}
         setOpen={setOpen}
         mobile={false}
         events={events}

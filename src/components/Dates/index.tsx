@@ -8,17 +8,28 @@ type DateProps = {
   label?: string | null;
   labelSpan?: number; // number of cells to span (only on the first cell)
   dayInfo?: DayInfo | null;
+  cellWidth?: number;
+  cellHeight?: number;
 };
 
 const Dates = (props: DateProps) => {
   const className = `day-wrapper ${props.dayState}`;
+  const cellWidth = props.cellWidth ?? 80;
+  const cellHeight = props.cellHeight ?? 80;
+  
   const handleClick = () => {
     // Blocked dates can't be clicked, strikethrough dates can be clicked through
     if (props.dayState === "blocked") return;
     props.onClick?.(props.date);
   };
+  
   return (
-    <div className={className} onClick={handleClick} role="button">
+    <div 
+      className={className} 
+      onClick={handleClick} 
+      role="button"
+      style={{ width: `${cellWidth}px`, height: `${cellHeight}px` }}
+    >
       {props.label ? (
         <div
           className="range-label"

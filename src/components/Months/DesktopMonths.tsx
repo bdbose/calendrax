@@ -15,6 +15,8 @@ type DesktopMonthsProps = {
   allowSameDay?: boolean;
   dayInfo?: DayInfo[];
   minNights?: MinNights;
+  cellWidth?: number; // Width of each date cell (default: 80px)
+  cellHeight?: number; // Height of each date cell (default: 80px)
 };
 
 const clampMonth = (month: number) => {
@@ -36,6 +38,8 @@ const DesktopMonths = (props: DesktopMonthsProps) => {
   const [selection, setSelection] = useState<SelectDateType>({ checkin: null, checkout: null });
 
   const count = props.count ?? 2;
+  const cellWidth = props.cellWidth ?? 80;
+  const cellHeight = props.cellHeight ?? 80;
 
   const ranges = useMemo(() => {
     return Array.from({ length: count }).map((_, i) => {
@@ -56,12 +60,8 @@ const DesktopMonths = (props: DesktopMonthsProps) => {
 
   return (
     <div className="desktop-months">
-      <div className="calendar-header">
-        <button onClick={goPrev}>←</button>
-        <button onClick={goNext}>→</button>
-      </div>
       <div className="months-grid">
-        {ranges.map(({ year, month }) => (
+        {ranges.map(({ year, month }, index) => (
           <Months
             key={`${year}-${month}`}
             date={selection}
@@ -76,6 +76,12 @@ const DesktopMonths = (props: DesktopMonthsProps) => {
             allowSameDay={props.allowSameDay}
             dayInfo={props.dayInfo}
             minNights={props.minNights}
+            cellWidth={cellWidth}
+            cellHeight={cellHeight}
+            showLeftArrow={index === 0}
+            showRightArrow={index === ranges.length - 1}
+            onPrevMonth={goPrev}
+            onNextMonth={goNext}
           />
         ))}
       </div>
