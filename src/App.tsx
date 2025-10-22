@@ -87,6 +87,7 @@ function App(props: CalendraxProps) {
         count={1}
         top={100}
         left={100}
+        calendarType={"hotel"}
       >
        
       </DatePicker>

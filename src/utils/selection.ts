@@ -52,17 +52,20 @@ export const hasBlockedDateInRange = (start: Date, end: Date, blockedDates?: Blo
   return false;
 };
 
-// Find first blocked date in range (used for hotel mode to auto-set checkout)
-export const findFirstBlockedDateInRange = (start: Date, end: Date, blockedDates?: BlockedDates): Date | null => {
+// Find first blocked date after a given start date (no end limit)
+// Used for hotel mode to determine the checkout boundary
+export const findFirstBlockedDateAfter = (start: Date, blockedDates?: BlockedDates): Date | null => {
   if (!blockedDates || blockedDates.length === 0) return null;
   
   const current = new Date(start);
-  const endTime = end.getTime();
-  
   // Start checking from day after start
   current.setDate(current.getDate() + 1);
   
-  while (current.getTime() <= endTime) {
+  // Check up to 2 years ahead (reasonable limit)
+  const maxDate = new Date(start);
+  maxDate.setFullYear(maxDate.getFullYear() + 2);
+  
+  while (current.getTime() <= maxDate.getTime()) {
     if (isDateBlocked(current, blockedDates)) {
       return new Date(current);
     }
@@ -87,12 +90,26 @@ export function getDateState(
   const { checkin, checkout } = selection;
   const dateIsBlocked = isDateBlocked(date, blockedDates);
   
-  // For hotel mode: blocked date can be checkout if we have checkin selected
-  if (dateIsBlocked && isHotelMode && checkin && !checkout) {
-    // This blocked date could be a potential checkout
-    if (compare(date, checkin) > 0) {
-      return "default"; // Allow selection as checkout
+  // Hotel mode: special logic when checkin is selected
+  if (isHotelMode && checkin && !checkout) {
+    // Find first blocked date after checkin
+    const firstBlockedAfterCheckin = findFirstBlockedDateAfter(checkin, blockedDates);
+    
+    if (firstBlockedAfterCheckin) {
+      const comparison = compare(date, firstBlockedAfterCheckin);
+      
+      // If this date is the first blocked date, allow as checkout
+      if (comparison === 0) {
+        return "default"; // Allow selection as checkout
+      }
+      
+      // If this date is after the first blocked date, block it
+      if (comparison > 0) {
+        return "blocked";
+      }
     }
+    
+    // Date is before first blocked date (or no blocked dates), use normal logic
   }
   
   // Regular blocking logic
@@ -128,26 +145,21 @@ export function nextSelectionOnClick(
   const { checkin, checkout } = selection;
   const dayIsBlocked = isDateBlocked(day, blockedDates);
   
-  // For hotel mode: allow blocked date as checkout if we have checkin
+  // For hotel mode: allow first blocked date as checkout if we have checkin
   if (dayIsBlocked && isHotelMode && checkin && !checkout) {
-    if (compare(day, checkin) > 0) {
-      // This is a valid checkout on a blocked date
-      // Check if there are blocked dates between checkin and this date (excluding this date)
-      const dayBefore = new Date(day);
-      dayBefore.setDate(dayBefore.getDate() - 1);
-      
-      if (hasBlockedDateInRange(checkin, dayBefore, blockedDates, calendarType)) {
-        // There's a blocked date in between, can't use this as checkout
-        return { checkin: day, checkout: null }; // Start new selection
-      }
-      
+    const firstBlockedAfterCheckin = findFirstBlockedDateAfter(checkin, blockedDates);
+    
+    // Only allow if this is the first blocked date after checkin
+    if (firstBlockedAfterCheckin && compare(day, firstBlockedAfterCheckin) === 0) {
       // Check minimum nights
       if (!meetsMinNights(checkin, day, minNights, blockedDates)) {
         return selection;
       }
-      
       return { checkin, checkout: day };
     }
+    
+    // Any other blocked date: start new selection
+    return { checkin: day, checkout: null };
   }
   
   // Regular blocked day handling
@@ -183,19 +195,6 @@ export function nextSelectionOnClick(
     
     // After checkin
     if (comparison > 0) {
-      // For hotel mode: check if there's a blocked date before the clicked date
-      // If yes, make that blocked date the checkout
-      if (isHotelMode) {
-        const firstBlocked = findFirstBlockedDateInRange(checkin, day, blockedDates);
-        if (firstBlocked) {
-          // Found a blocked date, use it as checkout
-          if (!meetsMinNights(checkin, firstBlocked, minNights, blockedDates)) {
-            return selection;
-          }
-          return { checkin, checkout: firstBlocked };
-        }
-      }
-      
       // Check if there are any blocked dates between checkin and clicked date
       if (hasBlockedDateInRange(checkin, day, blockedDates, calendarType)) {
         // Can't select this as checkout, start new selection
