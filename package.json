@@ -3,7 +3,7 @@
   "private": false,
   "version": "0.2.1",
   "type": "module",
-  "description": "A React/TypeScript calendar component library with event support and date range selection",
+  "description": "A powerful React/TypeScript calendar component with advanced booking features, minimum nights, day info display, and customizable date range selection",
   "author": "Bidipto Bose <bdbose123@gmail.com> (https://bdbose.in)",
   "license": "MIT",
   "repository": {
@@ -16,7 +16,16 @@
     "date-picker",
     "date-range",
     "typescript",
-    "events"
+    "events",
+    "booking",
+    "hotel",
+    "vacation-rental",
+    "minimum-nights",
+    "blocked-dates",
+    "day-info",
+    "price-display",
+    "responsive",
+    "customizable"
   ],
   "scripts": {
     "dev": "vite",
