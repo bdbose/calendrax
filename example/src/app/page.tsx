@@ -119,7 +119,7 @@ export default function Home() {
               allowPastDates={false}
               cellWidth={80}
               cellHeight={80}
-              count={2}
+             count={1}
               startMonth={today.getMonth() + 1}
               startYear={today.getFullYear()}
             >
@@ -284,7 +284,7 @@ export default function Home() {
               allowSameDay={true}
               cellWidth={60}
               cellHeight={60}
-              count={4}
+             count={1}
               startMonth={today.getMonth() + 1}
               startYear={today.getFullYear()}
             />
@@ -344,7 +344,7 @@ function App() {
       allowSameDay={true}
       cellWidth={80}
       cellHeight={80}
-      count={2}
+     count={1}
     >
       <button>Select Dates</button>
     </DatePicker>

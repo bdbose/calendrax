@@ -85,6 +85,8 @@ function App(props: CalendraxProps) {
         startMonth={today.getMonth() + 1}
         startYear={today.getFullYear()}
         count={1}
+        top={100}
+        left={100}
       >
        
       </DatePicker>

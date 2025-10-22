@@ -70,12 +70,15 @@ const DatePicker = (props: DatePickerProps) => {
       {props.open ? (
         <div className={props.mobile ? "mobile-container-calendrax" : "desktop-container-calendrax"}
           style={{
-            position: "relative",
+            position:props.mobile ? "relative" : "absolute",
             zIndex: 1000,
             background: "#fff",
             boxShadow: props.mobile ? "none" : "0 6px 22px rgba(0,0,0,0.15)",
             borderRadius: props.mobile ? 0 : 8,
             padding: props.mobile ? 0 : 8,
+            width: props.mobile ? "100%" : "fit-content",
+            top:props.mobile ? 0 : props.top,
+            left:props.mobile ? 0 : props.left,
           }}
         >
           {content}
