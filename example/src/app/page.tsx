@@ -497,12 +497,12 @@ function App() {
         }
 
         .mobile-container {
-          max-width: 420px;
+          max-width: 600px;
           margin: 24px auto;
           padding: 20px;
           background: #fafafa;
           border-radius: 8px;
-          position: relative;
+          // position: relative;
         }
 
         .trigger-btn {

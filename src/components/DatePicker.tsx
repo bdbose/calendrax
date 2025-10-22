@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import {  useRef, } from "react";
 import DesktopMonths from "./Months/DesktopMonths";
 import MobileMonths from "./Months/MobileMonths";
 import type { CalendarEvent, SelectDateType, BlockedDates, DayInfo, MinNights } from "../types/type";
@@ -28,22 +28,7 @@ type DatePickerProps = {
 
 const DatePicker = (props: DatePickerProps) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const [coords, setCoords] = useState<{ top: number; left: number }>({ top: 0, left: 0 });
-
-  // Get top and left with defaults
-  const topOffset = props.top ?? 0;
-  const leftOffset = props.left ?? 0;
-
-  useEffect(() => {
-    if (!props.open) return;
-    const el = containerRef.current;
-    if (!el) return;
-    const rect = el.getBoundingClientRect();
-    setCoords({ 
-      top: rect.bottom + window.scrollY + 8 + topOffset, 
-      left: rect.left + window.scrollX + leftOffset 
-    });
-  }, [props.open, topOffset, leftOffset]);
+  
 
   const content = props.mobile ? (
    
@@ -83,11 +68,9 @@ const DatePicker = (props: DatePickerProps) => {
     <div ref={containerRef} style={{ display: "inline-block", position: "relative", width: "100%" }}>
       {props.children}
       {props.open ? (
-        <div
+        <div className="desktop-container-calendrax"
           style={{
-            position: "absolute",
-            top: coords.top,
-            left: coords.left,
+            position: "relative",
             zIndex: 1000,
             background: "#fff",
             boxShadow: props.mobile ? "none" : "0 6px 22px rgba(0,0,0,0.15)",
