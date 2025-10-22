@@ -2,7 +2,7 @@ import { useEffect, useState, useMemo } from "react";
 import "./styles.css";
 import { generateCalendarDatesTrimmed } from "../../utils/generateMonth";
 import Dates from "../Dates";
-import type { SelectDateType, BlockedDates, DayInfo, MinNights } from "../../types/type";
+import type { SelectDateType, BlockedDates, DayInfo, MinNights, CalendarType } from "../../types/type";
 import { getDateState, nextSelectionOnClick, isBeforeToday } from "../../utils/selection";
 import { buildEventMap, getEventLabel } from "../../utils/events";
 import { buildDayInfoMap, getDayInfo } from "../../utils/dayInfo";
@@ -38,6 +38,7 @@ type MonthProps = {
   allowSameDay?: boolean;
   dayInfo?: DayInfo[];
   minNights?: MinNights;
+  calendarType?: CalendarType;
   cellWidth?: number;
   cellHeight?: number;
   showLeftArrow?: boolean;
@@ -177,7 +178,7 @@ const Months = (props: MonthProps) => {
               return;
             }
 
-            const dayState = getDateState(date, props.date, props.blockedDates, props.allowPastDates, props.allowSameDay, strikethroughDates);
+            const dayState = getDateState(date, props.date, props.blockedDates, props.allowPastDates, props.allowSameDay, strikethroughDates, props.calendarType);
             const info = getDayInfo(date, dayInfoMap);
             cells.push(
               <Dates
@@ -188,7 +189,7 @@ const Months = (props: MonthProps) => {
                 dayInfo={info}
                 cellWidth={cellWidth}
                 cellHeight={cellHeight}
-                onClick={(d) => props.setDate((prev) => nextSelectionOnClick(prev, d, props.blockedDates, props.allowPastDates, props.allowSameDay, props.minNights, strikethroughDates))}
+                onClick={(d) => props.setDate((prev) => nextSelectionOnClick(prev, d, props.blockedDates, props.allowPastDates, props.allowSameDay, props.minNights, strikethroughDates, props.calendarType))}
               />
             );
 

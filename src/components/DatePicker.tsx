@@ -1,7 +1,7 @@
 import {  useRef, } from "react";
 import DesktopMonths from "./Months/DesktopMonths";
 import MobileMonths from "./Months/MobileMonths";
-import type { CalendarEvent, SelectDateType, BlockedDates, DayInfo, MinNights } from "../types/type";
+import type { CalendarEvent, SelectDateType, BlockedDates, DayInfo, MinNights, CalendarType } from "../types/type";
 
 type DatePickerProps = {
   dates: SelectDateType;
@@ -16,6 +16,7 @@ type DatePickerProps = {
   allowSameDay?: boolean;
   dayInfo?: DayInfo[];
   minNights?: MinNights;
+  calendarType?: CalendarType; // "hotel" enables blocked dates as checkout-only
   startMonth?: number;
   startYear?: number;
   count?: number;
@@ -43,6 +44,7 @@ const DatePicker = (props: DatePickerProps) => {
       allowSameDay={props.allowSameDay}
       dayInfo={props.dayInfo}
       minNights={props.minNights}
+      calendarType={props.calendarType}
       onChange={props.setDates}
     />
 
@@ -58,6 +60,7 @@ const DatePicker = (props: DatePickerProps) => {
       allowSameDay={props.allowSameDay}
       dayInfo={props.dayInfo}
       minNights={props.minNights}
+      calendarType={props.calendarType}
       cellWidth={props.cellWidth}
       cellHeight={props.cellHeight}
       onChange={props.setDates}

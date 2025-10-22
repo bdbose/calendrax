@@ -27,3 +27,5 @@ export type DayInfo = {
 export type MinNights = {
   [date: string]: number; // Key: 'YYYY-MM-DD', Value: minimum nights required
 };
+
+export type CalendarType = "hotel" | null;

@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import "./styles.css";
 import Months from ".";
-import type { SelectDateType, BlockedDates, DayInfo, MinNights } from "../../types/type";
+import type { SelectDateType, BlockedDates, DayInfo, MinNights, CalendarType } from "../../types/type";
 
 type DesktopMonthsProps = {
   startMonth?: number; // 1-12
@@ -15,6 +15,7 @@ type DesktopMonthsProps = {
   allowSameDay?: boolean;
   dayInfo?: DayInfo[];
   minNights?: MinNights;
+  calendarType?: CalendarType;
   cellWidth?: number; // Width of each date cell (default: 80px)
   cellHeight?: number; // Height of each date cell (default: 80px)
 };
@@ -76,6 +77,7 @@ const DesktopMonths = (props: DesktopMonthsProps) => {
             allowSameDay={props.allowSameDay}
             dayInfo={props.dayInfo}
             minNights={props.minNights}
+            calendarType={props.calendarType}
             cellWidth={cellWidth}
             cellHeight={cellHeight}
             showLeftArrow={index === 0}

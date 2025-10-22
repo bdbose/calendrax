@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import "./styles.css";
 import Months from ".";
-import type { SelectDateType, BlockedDates, DayInfo, MinNights } from "../../types/type";
+import type { SelectDateType, BlockedDates, DayInfo, MinNights, CalendarType } from "../../types/type";
 
 type MobileMonthsProps = {
   startMonth?: number; // 1-12
@@ -17,6 +17,7 @@ type MobileMonthsProps = {
   allowSameDay?: boolean;
   dayInfo?: DayInfo[];
   minNights?: MinNights;
+  calendarType?: CalendarType;
 };
 
 const MobileMonths = (props: MobileMonthsProps) => {
@@ -117,6 +118,7 @@ const MobileMonths = (props: MobileMonthsProps) => {
             allowSameDay={props.allowSameDay}
             dayInfo={props.dayInfo}
             minNights={props.minNights}
+            calendarType={props.calendarType}
           />
         );
       })}
