@@ -68,7 +68,7 @@ const DatePicker = (props: DatePickerProps) => {
     <div ref={containerRef} style={{ display: "inline-block", position: "relative", width: "100%" }}>
       {props.children}
       {props.open ? (
-        <div className="desktop-container-calendrax"
+        <div className={props.mobile ? "mobile-container-calendrax" : "desktop-container-calendrax"}
           style={{
             position: "relative",
             zIndex: 1000,

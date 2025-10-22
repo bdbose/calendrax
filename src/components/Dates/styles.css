@@ -1,4 +1,5 @@
-.day-wrapper {
+/* Desktop day wrapper */
+.desktop-container-calendrax .day-wrapper {
   /* width and height set via inline styles for desktop */
   display: flex;
   flex-direction: column;
@@ -17,56 +18,69 @@
   box-sizing: border-box;
 }
 
-/* Mobile-specific: no borders or shadows, flexible sizing */
-@media (max-width: 768px) {
-  .day-wrapper {
-    border: none !important;
-    background: transparent !important;
-    width: 100% !important;
-    min-height: 60px;
-    height: auto !important;
-  }
-  .day-wrapper:hover{
-    background-color: #4a7ba7 !important;
-  }
-  
-  .day-wrapper.checkin,
-  .day-wrapper.checkout {
-    background: #4a7ba7 !important;
-    border: none !important;
-  }
-  
-  .day-wrapper.inRange {
-    background: #b8d4e8 !important;
-    border: none !important;
-  }
-  
-  .day-wrapper.blocked {
-    background: transparent !important;
-  }
-  
-  .day-wrapper.strikethrough {
-    background: transparent !important;
-  }
-
-  .day-wrapper.strikethrough::before {
-    width: 60%;
-  }
+/* Mobile day wrapper - no borders or shadows, flexible sizing */
+.mobile-container-calendrax .day-wrapper {
+  border: none;
+  background: transparent;
+  width: 100%;
+  min-height: 60px;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding-bottom: 8px;
+  border-radius: 0;
+  gap: 2px;
+  cursor: pointer;
+  position: relative;
+  font-size: 16px;
+  font-weight: 400;
+  color: #333;
+  box-sizing: border-box;
 }
 
-.day-wrapper.blocked {
+.mobile-container-calendrax .day-wrapper:hover {
+  background-color: #4a7ba7;
+}
+
+.mobile-container-calendrax .day-wrapper.checkin,
+.mobile-container-calendrax .day-wrapper.checkout {
+  background: #4a7ba7;
+  border: none;
+}
+
+.mobile-container-calendrax .day-wrapper.inRange {
+  background: #b8d4e8;
+  border: none;
+}
+
+.mobile-container-calendrax .day-wrapper.blocked {
+  background: transparent;
+}
+
+.mobile-container-calendrax .day-wrapper.strikethrough {
+  background: transparent;
+}
+
+.mobile-container-calendrax .day-wrapper.strikethrough::before {
+  width: 60%;
+}
+
+/* Desktop day states */
+.desktop-container-calendrax .day-wrapper.blocked {
   color: #ccc;
   background: #fafafa;
   pointer-events: none;
 }
 
-.day-wrapper.strikethrough {
+.desktop-container-calendrax .day-wrapper.strikethrough {
   position: relative;
   color: #999;
   cursor: pointer;
 }
 
-.day-wrapper.strikethrough::before {
+.desktop-container-calendrax .day-wrapper.strikethrough::before {
   content: '';
   position: absolute;
   left: 50%;
@@ -78,25 +92,44 @@
   z-index: 2;
 }
 
-.day-wrapper.strikethrough:hover {
+.desktop-container-calendrax .day-wrapper.strikethrough:hover {
   background: #f5f5f5;
 }
 
-.day-wrapper.checkin,
-.day-wrapper.checkout {
+.desktop-container-calendrax .day-wrapper.checkin,
+.desktop-container-calendrax .day-wrapper.checkout {
   background: #4a7ba7;
   color: #fff;
 }
 
-.day-wrapper.inRange {
+.desktop-container-calendrax .day-wrapper.inRange {
   background: #b8d4e8;
   color: #333;
 }
 
-/* .day-wrapper:hover:not(.blocked) {
-  background: #f0f7ff;
-  border-color: #4a7ba7;
-} */
+/* Mobile day states */
+.mobile-container-calendrax .day-wrapper.blocked {
+  color: #ccc;
+  pointer-events: none;
+}
+
+.mobile-container-calendrax .day-wrapper.strikethrough {
+  position: relative;
+  color: #999;
+  cursor: pointer;
+}
+
+.mobile-container-calendrax .day-wrapper.strikethrough::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 60%;
+  height: 2px;
+  background: #ff4444;
+  z-index: 2;
+}
 
 .day-label {
   display: none;
@@ -107,7 +140,8 @@
   font-weight: inherit;
 }
 
-.day-info {
+/* Desktop day info */
+.desktop-container-calendrax .day-info {
   font-size: 10px;
   font-weight: 500;
   padding: 2px 4px;
@@ -120,9 +154,16 @@
   text-align: center;
 }
 
-@media (max-width: 768px) {
-  .day-info {
-    font-size: 9px;
-    padding: 1px 3px;
-  }
+/* Mobile day info */
+.mobile-container-calendrax .day-info {
+  font-size: 9px;
+  font-weight: 500;
+  padding: 1px 3px;
+  border-radius: 3px;
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 90%;
+  text-align: center;
 }
