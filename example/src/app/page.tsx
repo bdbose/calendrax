@@ -104,6 +104,15 @@ export default function Home() {
           </div>
           
           <div className="calendar-wrapper">
+            <button 
+              className="trigger-btn"
+              onClick={() => setHotelOpen(!hotelOpen)}
+            >
+              {hotelDates.checkin 
+                ? `${hotelDates.checkin.toLocaleDateString()} → ${hotelDates.checkout?.toLocaleDateString() || 'Select checkout'}`
+                : 'Select Hotel Dates'}
+            </button>
+
             <DatePicker
               dates={hotelDates}
               setDates={setHotelDates}
@@ -122,13 +131,7 @@ export default function Home() {
               count={2}
               startMonth={today.getMonth() + 1}
               startYear={today.getFullYear()}
-            >
-              <button className="trigger-btn">
-                {hotelDates.checkin 
-                  ? `${hotelDates.checkin.toLocaleDateString()} → ${hotelDates.checkout?.toLocaleDateString() || 'Select checkout'}`
-                  : 'Select Hotel Dates'}
-              </button>
-            </DatePicker>
+            />
           </div>
 
           {hotelDates.checkin && (
@@ -168,6 +171,15 @@ export default function Home() {
           </div>
 
           <div className="calendar-wrapper">
+            <button 
+              className="trigger-btn secondary"
+              onClick={() => setEventOpen(!eventOpen)}
+            >
+              {eventDates.checkin 
+                ? `${eventDates.checkin.toLocaleDateString()} → ${eventDates.checkout?.toLocaleDateString() || 'Select end'}`
+                : 'View Company Events'}
+            </button>
+
             <DatePicker
               dates={eventDates}
               setDates={setEventDates}
@@ -184,13 +196,7 @@ export default function Home() {
               count={3}
               startMonth={today.getMonth() + 1}
               startYear={today.getFullYear()}
-            >
-              <button className="trigger-btn secondary">
-                {eventDates.checkin 
-                  ? `${eventDates.checkin.toLocaleDateString()} → ${eventDates.checkout?.toLocaleDateString() || 'Select end'}`
-                  : 'View Company Events'}
-              </button>
-            </DatePicker>
+            />
           </div>
 
           <div className="info-box">
@@ -257,6 +263,15 @@ export default function Home() {
           </div>
 
           <div className="calendar-wrapper">
+            <button 
+              className="trigger-btn tertiary"
+              onClick={() => setCustomOpen(!customOpen)}
+            >
+              {customDates.checkin 
+                ? `${customDates.checkin.toLocaleDateString()} → ${customDates.checkout?.toLocaleDateString() || 'Select end'}`
+                : 'Compact Calendar (60x60)'}
+            </button>
+
             <DatePicker
               dates={customDates}
               setDates={setCustomDates}
@@ -272,13 +287,7 @@ export default function Home() {
               count={4}
               startMonth={today.getMonth() + 1}
               startYear={today.getFullYear()}
-            >
-              <button className="trigger-btn tertiary">
-                {customDates.checkin 
-                  ? `${customDates.checkin.toLocaleDateString()} → ${customDates.checkout?.toLocaleDateString() || 'Select end'}`
-                  : 'Compact Calendar (60x60)'}
-              </button>
-            </DatePicker>
+            />
           </div>
 
           <div className="info-box">
@@ -504,6 +513,8 @@ function App() {
           color: #fff;
           cursor: pointer;
           transition: all 0.2s;
+          margin-bottom: 16px;
+          display: block;
         }
 
         .trigger-btn:hover {
@@ -637,6 +648,10 @@ function App() {
         }
 
         @media (max-width: 768px) {
+          .container {
+            padding: 20px 12px;
+          }
+
           .header h1 {
             font-size: 32px;
           }
@@ -655,6 +670,22 @@ function App() {
 
           .calendar-wrapper {
             padding: 16px;
+          }
+
+          .mobile-container {
+            max-width: 100%;
+            padding: 12px;
+            margin: 16px 0;
+          }
+
+          .trigger-btn {
+            width: 100%;
+            padding: 12px 20px;
+            font-size: 14px;
+          }
+
+          .features-grid {
+            grid-template-columns: 1fr;
           }
         }
       `}</style>
