@@ -87,6 +87,7 @@
   text-align: center;
   box-sizing: border-box;
   border-radius: 3px;
+  white-space: pre-wrap;
 }
 
 /* Black background for minimum nights restriction labels */
