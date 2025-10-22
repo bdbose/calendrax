@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "calendrax": "^0.4.1",
+    "calendrax": "^0.5.0",
     "next": "^14.2.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
