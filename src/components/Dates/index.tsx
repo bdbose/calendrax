@@ -23,12 +23,20 @@ const Dates = (props: DateProps) => {
     props.onClick?.(props.date);
   };
   
+  // Generate tooltip text
+  const getTooltip = () => {
+    if (props.dayState === "checkin") return "Check-in";
+    if (props.dayState === "checkout") return "Check-out";
+    return undefined;
+  };
+  
   return (
     <div 
       className={className} 
       onClick={handleClick} 
       role="button"
       style={{ width: `${cellWidth}px`, height: `${cellHeight}px` }}
+      title={getTooltip()}
     >
       {props.label ? (
         <div

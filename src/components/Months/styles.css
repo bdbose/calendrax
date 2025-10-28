@@ -225,3 +225,83 @@
 .mobile-container-calendrax .month-nav-arrow {
   display: none;
 }
+
+/* Night stay display */
+.desktop-container-calendrax .night-stay-display {
+  margin-top: 12px;
+  padding: 8px 12px;
+  background: #4a90e2;
+  color: white;
+  font-weight: 600;
+  font-size: 13px;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.mobile-container-calendrax .night-stay-display {
+  margin-top: 12px;
+  padding: 8px 12px;
+  background: #4a90e2;
+  color: white;
+  font-weight: 600;
+  font-size: 13px;
+  border-radius: 4px;
+  text-align: center;
+}
+
+/* Events list below month (desktop only) */
+.desktop-container-calendrax .month-events-list {
+  margin-top: 16px;
+  padding: 12px;
+  background: #f9f9f9;
+  border-radius: 6px;
+  border: 1px solid #e0e0e0;
+}
+
+.desktop-container-calendrax .month-event-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 6px 0;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.desktop-container-calendrax .month-event-item:not(:last-child) {
+  border-bottom: 1px solid #e8e8e8;
+}
+
+.desktop-container-calendrax .event-dot {
+  color: #c47a00;
+  font-size: 10px;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.desktop-container-calendrax .event-date {
+  font-weight: 600;
+  color: #666;
+  min-width: 80px;
+  flex-shrink: 0;
+}
+
+.desktop-container-calendrax .event-name {
+  color: #333;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+}
+
+/* Fix event label overflow - ensure ellipsis works */
+.desktop-container-calendrax .event-label {
+  white-space: nowrap !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mobile-container-calendrax .event-label {
+  white-space: nowrap !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

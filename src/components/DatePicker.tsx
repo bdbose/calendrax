@@ -22,6 +22,7 @@ type DatePickerProps = {
   count?: number;
   cellWidth?: number; // Width of each date cell in pixels (default: 80, only for desktop)
   cellHeight?: number; // Height of each date cell in pixels (default: 80, only for desktop)
+  showEventsList?: boolean; // Show events list below each month (desktop only, default: false)
   top?: number; // Top position offset in pixels (default: 0)
   left?: number; // Left position offset in pixels (default: 0)
   children?: React.ReactNode; // trigger
@@ -65,6 +66,7 @@ const DatePicker = (props: DatePickerProps) => {
       calendarType={props.calendarType}
       cellWidth={props.cellWidth}
       cellHeight={props.cellHeight}
+      showEventsList={props.showEventsList}
       onChange={props.setDates}
     />
   );

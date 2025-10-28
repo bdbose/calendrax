@@ -19,6 +19,7 @@ type DesktopMonthsProps = {
   calendarType?: CalendarType;
   cellWidth?: number; // Width of each date cell (default: 80px)
   cellHeight?: number; // Height of each date cell (default: 80px)
+  showEventsList?: boolean; // Show events list below each month (desktop only)
 };
 
 const clampMonth = (month: number) => {
@@ -34,9 +35,13 @@ const normalize = (year: number, month: number) => {
 
 const DesktopMonths = (props: DesktopMonthsProps) => {
   const today = new Date();
-  const [base, setBase] = useState(() =>
-    normalize(props.startYear ?? today.getFullYear(), clampMonth(props.startMonth ?? today.getMonth() + 1))
-  );
+  const [base, setBase] = useState(() => {
+    // If checkin exists, start from checkin month; otherwise use props or today
+    if (props.dates.checkin) {
+      return normalize(props.dates.checkin.getFullYear(), props.dates.checkin.getMonth() + 1);
+    }
+    return normalize(props.startYear ?? today.getFullYear(), clampMonth(props.startMonth ?? today.getMonth() + 1));
+  });
 
   const count = props.count ?? 2;
   const cellWidth = props.cellWidth ?? 80;
@@ -90,6 +95,7 @@ const DesktopMonths = (props: DesktopMonthsProps) => {
             showRightArrow={index === ranges.length - 1}
             onPrevMonth={goPrev}
             onNextMonth={goNext}
+            showEventsList={props.showEventsList}
           />
         ))}
       </div>

@@ -45,6 +45,7 @@ type MonthProps = {
   showRightArrow?: boolean;
   onPrevMonth?: () => void;
   onNextMonth?: () => void;
+  showEventsList?: boolean;
 };
 
 const Months = (props: MonthProps) => {
@@ -89,6 +90,34 @@ const Months = (props: MonthProps) => {
   const cellWidth = props.cellWidth ?? 80;
   const cellHeight = props.cellHeight ?? 80;
   const gap = 2; // Gap between cells
+
+  // Calculate night stay text
+  const nightStayText = useMemo(() => {
+    if (!props.date.checkin || !props.date.checkout) return null;
+    const nights = Math.floor((props.date.checkout.getTime() - props.date.checkin.getTime()) / (1000 * 60 * 60 * 24));
+    if (nights <= 0) return null;
+    return `${nights}-night stay`;
+  }, [props.date.checkin, props.date.checkout]);
+
+  // Filter events for this month (for events list)
+  const monthEvents = useMemo(() => {
+    if (!props.showEventsList || !props.events) return [];
+    
+    const monthStart = new Date(props.year, props.month - 1, 1);
+    const monthEnd = new Date(props.year, props.month, 0);
+    
+    return props.events.filter(event => {
+      const eventStart = new Date(event.start_date);
+      const eventEnd = new Date(event.end_date);
+      
+      // Event overlaps with this month
+      return (eventStart <= monthEnd && eventEnd >= monthStart);
+    }).map(event => ({
+      ...event,
+      start: new Date(event.start_date),
+      end: new Date(event.end_date)
+    })).sort((a, b) => a.start.getTime() - b.start.getTime());
+  }, [props.showEventsList, props.events, props.year, props.month]);
 
   return (
     <div className="month-container">
@@ -148,6 +177,7 @@ const Months = (props: MonthProps) => {
                   gridColumn: `${startCol} / span ${span}`,
                   gridRow: row,
                 }}
+                title={label}
               >
                 {label}
               </div>
@@ -239,6 +269,31 @@ const Months = (props: MonthProps) => {
           return [...eventLabels, ...cells];
         })()}
       </div>
+      
+      {/* Night stay display */}
+      {nightStayText && (
+        <div className="night-stay-display">
+          {nightStayText}
+        </div>
+      )}
+      
+      {/* Events list below month */}
+      {props.showEventsList && monthEvents.length > 0 && (
+        <div className="month-events-list">
+          {monthEvents.map((event, idx) => (
+            <div key={idx} className="month-event-item">
+              <span className="event-dot">●</span>
+              <span className="event-date">
+                {event.start.getDate()} {months[event.start.getMonth()]}
+                {event.start.getMonth() !== event.end.getMonth() || event.start.getDate() !== event.end.getDate() 
+                  ? ` - ${event.end.getDate()} ${months[event.end.getMonth()]}`
+                  : ''}
+              </span>
+              <span className="event-name" title={event.name}>{event.name}</span>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
