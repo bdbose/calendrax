@@ -113,7 +113,7 @@ const MobileMonths = (props: MobileMonthsProps) => {
               if (props.onChange) {
                 props.onChange(newDates);
               }
-            }}
+            } }
             month={month}
             year={year}
             events={props.events}
@@ -124,8 +124,7 @@ const MobileMonths = (props: MobileMonthsProps) => {
             allowSameDay={props.allowSameDay}
             dayInfo={props.dayInfo}
             minNights={props.minNights}
-            calendarType={props.calendarType}
-          />
+            calendarType={props.calendarType} isMobile={true}          />
         );
       })}
     </div>

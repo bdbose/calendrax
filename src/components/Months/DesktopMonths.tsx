@@ -69,6 +69,7 @@ const DesktopMonths = (props: DesktopMonthsProps) => {
       <div className="months-grid">
         {ranges.map(({ year, month }, index) => (
           <Months
+            isMobile={false}
             key={`${year}-${month}`}
             date={props.dates}
             setDate={(action) => {

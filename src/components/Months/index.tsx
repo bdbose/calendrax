@@ -26,6 +26,7 @@ const months = [
 ];
 
 type MonthProps = {
+  isMobile: boolean;
   date: SelectDateType;
   setDate: React.Dispatch<React.SetStateAction<SelectDateType>>;
   month: number;
@@ -87,8 +88,8 @@ const Months = (props: MonthProps) => {
     [props.date.checkin, props.minNights, props.blockedDates]
   );
 
-  const cellWidth = props.cellWidth ?? 80;
-  const cellHeight = props.cellHeight ?? 80;
+  const cellWidth = props.isMobile ? "100%" : props.cellWidth ?? 80;
+  const cellHeight = props.isMobile ? "100%" : props.cellHeight ?? 80;
   const gap = 2; // Gap between cells
 
   // Calculate night stay text
@@ -139,7 +140,7 @@ const Months = (props: MonthProps) => {
       <div 
         className="month-wrapper"
         style={{
-          gridTemplateColumns: `repeat(7, ${cellWidth}px)`,
+          gridTemplateColumns: props.isMobile ? "repeat(7, 1fr)" : `repeat(7, ${cellWidth}px)`,
           // gridAutoRows: `${cellHeight}px`,
           gap: `${gap}px`,
         }}
@@ -149,7 +150,7 @@ const Months = (props: MonthProps) => {
             <div 
               className="week-wrapper" 
               key={`wk-${e}`}
-              style={{ width: `${cellWidth}px` }}
+              style={{ width: props.isMobile ? "100%" : `${cellWidth}px` }}
             >
               {e}
             </div>
@@ -194,7 +195,7 @@ const Months = (props: MonthProps) => {
                 <div 
                   className="filler-date" 
                   key={`f-${idx}`}
-                  style={{ width: `${cellWidth}px`, height: `${cellHeight}px` }}
+                  style={{ width: props.isMobile ? "100%" : `${cellWidth}px`, height: props.isMobile ? "100%" : `${cellHeight}px` }}
                 ></div>
               );
               
@@ -215,6 +216,7 @@ const Months = (props: MonthProps) => {
                 key={date.toISOString()}
                 date={date}
                 dayState={dayState}
+                isMobile={props.isMobile}
                 label={null}
                 dayInfo={info}
                 cellWidth={cellWidth}

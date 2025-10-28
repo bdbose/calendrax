@@ -8,8 +8,9 @@ type DateProps = {
   label?: string | null;
   labelSpan?: number; // number of cells to span (only on the first cell)
   dayInfo?: DayInfo | null;
-  cellWidth?: number;
-  cellHeight?: number;
+  cellWidth?: number | string;
+  cellHeight?: number | string; 
+  isMobile: boolean;
 };
 
 const Dates = (props: DateProps) => {
@@ -35,7 +36,7 @@ const Dates = (props: DateProps) => {
       className={className} 
       onClick={handleClick} 
       role="button"
-      style={{ width: `${cellWidth}px`, height: `${cellHeight}px` }}
+      style={{ width: props.isMobile ? "100%" : `${cellWidth}px`, height: props.isMobile ? "100%" : `${cellHeight}px` }}
       title={getTooltip()}
     >
       {props.label ? (
