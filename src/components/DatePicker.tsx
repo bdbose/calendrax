@@ -34,6 +34,7 @@ const DatePicker = (props: DatePickerProps) => {
   const content = props.mobile ? (
    
     <MobileMonths
+      dates={props.dates}
       startMonth={props.startMonth}
       startYear={props.startYear}
       count={props.count}
@@ -50,6 +51,7 @@ const DatePicker = (props: DatePickerProps) => {
 
   ) : (
     <DesktopMonths
+      dates={props.dates}
       startMonth={props.startMonth}
       startYear={props.startYear}
       count={props.count}

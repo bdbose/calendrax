@@ -1,5 +1,7 @@
+import { useState } from "react";
 import DesktopMonths from "./Months/DesktopMonths";
 import MobileMonths from "./Months/MobileMonths";
+import type { SelectDateType } from "../types/type";
 
 type MonthViewProps = {
   isMobile?: boolean;
@@ -11,24 +13,30 @@ type MonthViewProps = {
 };
 
 const MonthView = (props: MonthViewProps) => {
+  const [dates, setDates] = useState<SelectDateType>({ checkin: null, checkout: null });
+  
   if (props.isMobile) {
     return (
       <MobileMonths
+        dates={dates}
         startMonth={props.startMonth}
         startYear={props.startYear}
         count={props.count}
         events={props.events}
         showEvents={props.showEvents}
+        onChange={setDates}
       />
     );
   }
   return (
     <DesktopMonths
+      dates={dates}
       startMonth={props.startMonth}
       startYear={props.startYear}
       count={props.count}
       events={props.events}
       showEvents={props.showEvents}
+      onChange={setDates}
     />
   );
 };

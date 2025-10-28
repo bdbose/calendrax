@@ -4,6 +4,7 @@ import Months from ".";
 import type { SelectDateType, BlockedDates, DayInfo, MinNights, CalendarType } from "../../types/type";
 
 type DesktopMonthsProps = {
+  dates: SelectDateType;
   startMonth?: number; // 1-12
   startYear?: number;
   count?: number; // number of months to render
@@ -36,7 +37,6 @@ const DesktopMonths = (props: DesktopMonthsProps) => {
   const [base, setBase] = useState(() =>
     normalize(props.startYear ?? today.getFullYear(), clampMonth(props.startMonth ?? today.getMonth() + 1))
   );
-  const [selection, setSelection] = useState<SelectDateType>({ checkin: null, checkout: null });
 
   const count = props.count ?? 2;
   const cellWidth = props.cellWidth ?? 80;
@@ -65,8 +65,14 @@ const DesktopMonths = (props: DesktopMonthsProps) => {
         {ranges.map(({ year, month }, index) => (
           <Months
             key={`${year}-${month}`}
-            date={selection}
-            setDate={setSelection}
+            date={props.dates}
+            setDate={(action) => {
+              // Handle both function and direct value updates
+              const newDates = typeof action === 'function' ? action(props.dates) : action;
+              if (props.onChange) {
+                props.onChange(newDates);
+              }
+            }}
             month={month}
             year={year}
             events={props.events}

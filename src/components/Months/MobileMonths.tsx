@@ -4,6 +4,7 @@ import Months from ".";
 import type { SelectDateType, BlockedDates, DayInfo, MinNights, CalendarType } from "../../types/type";
 
 type MobileMonthsProps = {
+  dates: SelectDateType;
   startMonth?: number; // 1-12
   startYear?: number;
   count?: number; // initial number of months to render
@@ -40,7 +41,6 @@ const MobileMonths = (props: MobileMonthsProps) => {
   );
 
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const [selection, setSelection] = useState<SelectDateType>({ checkin: null, checkout: null });
 
   // Helper to compute year/month from offset
   const getYearMonthByOffset = (offset: number) => {
@@ -106,8 +106,14 @@ const MobileMonths = (props: MobileMonthsProps) => {
         return (
           <Months
             key={`${year}-${month}`}
-            date={selection}
-            setDate={setSelection}
+            date={props.dates}
+            setDate={(action) => {
+              // Handle both function and direct value updates
+              const newDates = typeof action === 'function' ? action(props.dates) : action;
+              if (props.onChange) {
+                props.onChange(newDates);
+              }
+            }}
             month={month}
             year={year}
             events={props.events}
