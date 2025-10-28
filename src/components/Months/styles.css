@@ -80,7 +80,7 @@
   right: 2px;
   z-index: 5;
   height: 20px;
-  display: flex;
+  display: inline-block;
   align-items: center;
   justify-content: center;
   background: #ffefd5;
@@ -95,7 +95,7 @@
   text-align: center;
   box-sizing: border-box;
   border-radius: 3px;
-  white-space: pre-wrap;
+  white-space:no-wrap;
 }
 
 /* Mobile event label */
@@ -106,7 +106,7 @@
   right: 2px;
   z-index: 5;
   height: 20px;
-  display: flex;
+  display: inline-block;
   align-items: center;
   justify-content: center;
   background: #ffefd5;
@@ -121,7 +121,7 @@
   text-align: center;
   box-sizing: border-box;
   border-radius: 3px;
-  white-space: pre-wrap;
+  white-space:no-wrap;
   box-shadow: none;
 }
 
@@ -253,23 +253,27 @@
 .desktop-container-calendrax .month-events-list {
   margin-top: 16px;
   padding: 12px;
-  background: #f9f9f9;
-  border-radius: 6px;
-  border: 1px solid #e0e0e0;
+  /* background: #f9f9f9; */
+  /* border-radius: 6px; */
+  /* border: 1px solid #e0e0e0; */
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
 }
 
 .desktop-container-calendrax .month-event-item {
   display: flex;
   align-items: flex-start;
+  font-family: sans-serif;
   gap: 8px;
   padding: 6px 0;
   font-size: 12px;
   line-height: 1.4;
 }
 
-.desktop-container-calendrax .month-event-item:not(:last-child) {
+/* .desktop-container-calendrax .month-event-item:not(:last-child) {
   border-bottom: 1px solid #e8e8e8;
-}
+} */
 
 .desktop-container-calendrax .event-dot {
   color: #c47a00;

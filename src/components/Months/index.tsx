@@ -140,7 +140,7 @@ const Months = (props: MonthProps) => {
         className="month-wrapper"
         style={{
           gridTemplateColumns: `repeat(7, ${cellWidth}px)`,
-          gridAutoRows: `${cellHeight}px`,
+          // gridAutoRows: `${cellHeight}px`,
           gap: `${gap}px`,
         }}
       >
@@ -271,11 +271,11 @@ const Months = (props: MonthProps) => {
       </div>
       
       {/* Night stay display */}
-      {nightStayText && (
+      {/* {nightStayText && (
         <div className="night-stay-display">
           {nightStayText}
         </div>
-      )}
+      )} */}
       
       {/* Events list below month */}
       {props.showEventsList && monthEvents.length > 0 && (

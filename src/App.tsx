@@ -84,9 +84,10 @@ function App(props: CalendraxProps) {
         minNights={minNightsRestrictions}
         startMonth={today.getMonth() + 1}
         startYear={today.getFullYear()}
-        count={1}
+        count={2}
         top={100}
         left={100}
+        showEventsList={true}
         calendarType={"hotel"}
       >
        
