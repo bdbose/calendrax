@@ -1,7 +1,7 @@
 {
   "name": "calendrax",
   "private": false,
-  "version": "0.7.3",
+  "version": "0.7.4",
   "type": "module",
   "description": "A powerful React/TypeScript calendar component with advanced booking features, minimum nights, day info display, and customizable date range selection",
   "author": "Bidipto Bose <bdbose123@gmail.com> (https://bdbose.in)",
