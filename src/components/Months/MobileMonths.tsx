@@ -23,19 +23,31 @@ type MobileMonthsProps = {
 
 const MobileMonths = (props: MobileMonthsProps) => {
   const today = new Date();
+  const currentMonth = today.getMonth() + 1;
+  const currentYear = today.getFullYear();
+  
   const base = useMemo(() => {
-    const d = new Date(
-      props.startYear ?? today.getFullYear(),
-      (props.startMonth ?? today.getMonth() + 1) - 1,
-      1
-    );
+    let startYear = props.startYear ?? currentYear;
+    let startMonth = (props.startMonth ?? currentMonth);
+    
+    // If allowPastDates is false, ensure we don't start before current month
+    if (!props.allowPastDates) {
+      const startDate = new Date(startYear, startMonth - 1, 1);
+      const todayDate = new Date(currentYear, currentMonth - 1, 1);
+      if (startDate < todayDate) {
+        startYear = currentYear;
+        startMonth = currentMonth;
+      }
+    }
+    
+    const d = new Date(startYear, startMonth - 1, 1);
     return { year: d.getFullYear(), month: d.getMonth() + 1 };
-  }, [props.startMonth, props.startYear]);
+  }, [props.startMonth, props.startYear, props.allowPastDates, currentMonth, currentYear]);
 
   const initialCount = props.count ?? 6;
   const chunkSize = props.chunkSize ?? Math.max(3, Math.floor(initialCount / 2));
 
-  // Offsets from base month: 0, 1, 2 ...; allow negatives for previous months
+  // Offsets from base month: 0, 1, 2 ...; allow negatives for previous months only if allowPastDates is true
   const [offsets, setOffsets] = useState<number[]>(() =>
     Array.from({ length: initialCount }, (_, i) => i)
   );
@@ -50,6 +62,18 @@ const MobileMonths = (props: MobileMonthsProps) => {
 
   // Extend upwards (prepend negatives) and preserve scroll position to avoid jump
   const prependMore = () => {
+    // If allowPastDates is false, don't prepend months before current month
+    if (!props.allowPastDates) {
+      const minOffset = offsets[0] ?? 0;
+      const firstMonthDate = new Date(base.year, base.month - 1 + minOffset, 1);
+      const todayDate = new Date(currentYear, currentMonth - 1, 1);
+      
+      // If the first month would be before today, don't prepend
+      if (firstMonthDate <= todayDate) {
+        return;
+      }
+    }
+    
     const node = containerRef.current;
     if (!node) return;
     const prevScrollHeight = node.scrollHeight;
@@ -103,6 +127,16 @@ const MobileMonths = (props: MobileMonthsProps) => {
     >
       {offsets.map((off) => {
         const { year, month } = getYearMonthByOffset(off);
+        
+        // Skip rendering past months if allowPastDates is false
+        if (!props.allowPastDates) {
+          const monthDate = new Date(year, month - 1, 1);
+          const todayDate = new Date(currentYear, currentMonth - 1, 1);
+          if (monthDate < todayDate) {
+            return null;
+          }
+        }
+        
         return (
           <Months
             key={`${year}-${month}`}

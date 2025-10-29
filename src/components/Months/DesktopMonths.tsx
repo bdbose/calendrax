@@ -35,12 +35,30 @@ const normalize = (year: number, month: number) => {
 
 const DesktopMonths = (props: DesktopMonthsProps) => {
   const today = new Date();
+  const currentMonth = today.getMonth() + 1;
+  const currentYear = today.getFullYear();
+  
   const [base, setBase] = useState(() => {
     // If checkin exists, start from checkin month; otherwise use props or today
+    let startYear = props.startYear ?? currentYear;
+    let startMonth = clampMonth(props.startMonth ?? currentMonth);
+    
     if (props.dates.checkin) {
-      return normalize(props.dates.checkin.getFullYear(), props.dates.checkin.getMonth() + 1);
+      startYear = props.dates.checkin.getFullYear();
+      startMonth = props.dates.checkin.getMonth() + 1;
     }
-    return normalize(props.startYear ?? today.getFullYear(), clampMonth(props.startMonth ?? today.getMonth() + 1));
+    
+    // If allowPastDates is false, ensure we don't start before current month
+    if (!props.allowPastDates) {
+      const startDate = new Date(startYear, startMonth - 1, 1);
+      const todayDate = new Date(currentYear, currentMonth - 1, 1);
+      if (startDate < todayDate) {
+        startYear = currentYear;
+        startMonth = currentMonth;
+      }
+    }
+    
+    return normalize(startYear, startMonth);
   });
 
   const count = props.count ?? 2;
@@ -54,7 +72,16 @@ const DesktopMonths = (props: DesktopMonthsProps) => {
     });
   }, [base, count]);
 
+  // Check if we can go to previous month
+  const canGoPrev = useMemo(() => {
+    if (props.allowPastDates) return true;
+    const prevDate = new Date(base.year, base.month - 2, 1);
+    const todayDate = new Date(currentYear, currentMonth - 1, 1);
+    return prevDate >= todayDate;
+  }, [base, props.allowPastDates, currentYear, currentMonth]);
+
   const goPrev = () => {
+    if (!canGoPrev) return;
     const d = new Date(base.year, base.month - 2, 1);
     setBase({ year: d.getFullYear(), month: d.getMonth() + 1 });
   };
@@ -67,7 +94,17 @@ const DesktopMonths = (props: DesktopMonthsProps) => {
   return (
     <div className="desktop-months">
       <div className="months-grid">
-        {ranges.map(({ year, month }, index) => (
+        {ranges.map(({ year, month }, index) => {
+          // Skip rendering past months if allowPastDates is false
+          if (!props.allowPastDates) {
+            const monthDate = new Date(year, month - 1, 1);
+            const todayDate = new Date(currentYear, currentMonth - 1, 1);
+            if (monthDate < todayDate) {
+              return null;
+            }
+          }
+          
+          return (
           <Months
             isMobile={false}
             key={`${year}-${month}`}
@@ -92,13 +129,14 @@ const DesktopMonths = (props: DesktopMonthsProps) => {
             calendarType={props.calendarType}
             cellWidth={cellWidth}
             cellHeight={cellHeight}
-            showLeftArrow={index === 0}
+            showLeftArrow={index === 0 && canGoPrev}
             showRightArrow={index === ranges.length - 1}
             onPrevMonth={goPrev}
             onNextMonth={goNext}
             showEventsList={props.showEventsList}
           />
-        ))}
+        );
+        })}
       </div>
     </div>
   );
