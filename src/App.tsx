@@ -59,6 +59,7 @@ function App(props: CalendraxProps) {
     "2025-10-24": 3,  // Oct 24 requires minimum 3 nights
     "2025-10-31": 2,  // Oct 31 requires minimum 2 nights
     "2025-11-01": 2,  // Nov 1 requires minimum 2 nights
+  "2025-12-01":2
   };
 
 

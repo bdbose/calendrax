@@ -167,3 +167,104 @@
   max-width: 90%;
   text-align: center;
 }
+
+/* Minimum nights tooltip */
+.min-nights-tooltip {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  z-index: 1000;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+/* Center positioning (default) */
+.min-nights-tooltip-center {
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* Left positioning (for Monday and left edge cases) */
+.min-nights-tooltip-left {
+  left: 0;
+  transform: none;
+}
+
+/* Right positioning (for Sunday and right edge cases) */
+.min-nights-tooltip-right {
+  right: 0;
+  left: auto;
+  transform: none;
+}
+
+/* Mobile: ensure tooltip doesn't overflow screen edges */
+.mobile-container-calendrax .min-nights-tooltip-left {
+  left: 8px;
+  max-width: calc(100vw - 16px);
+}
+
+.mobile-container-calendrax .min-nights-tooltip-right {
+  right: 8px;
+  left: auto;
+  max-width: calc(100vw - 16px);
+}
+
+.mobile-container-calendrax .min-nights-tooltip-center {
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: calc(100vw - 16px);
+}
+
+.min-nights-tooltip-content {
+  background: #f5f5f5;
+  color: #333;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  display: inline-block;
+}
+
+/* Arrow positioning for center */
+.min-nights-tooltip-arrow-center {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid #f5f5f5;
+  filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.1));
+}
+
+/* Arrow positioning for left */
+.min-nights-tooltip-arrow-left {
+  position: absolute;
+  top: 100%;
+  left: 20px;
+  transform: none;
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid #f5f5f5;
+  filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.1));
+}
+
+/* Arrow positioning for right */
+.min-nights-tooltip-arrow-right {
+  position: absolute;
+  top: 100%;
+  right: 20px;
+  left: auto;
+  transform: none;
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid #f5f5f5;
+  filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.1));
+}

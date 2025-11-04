@@ -221,6 +221,9 @@ const Months = (props: MonthProps) => {
                 dayInfo={info}
                 cellWidth={cellWidth}
                 cellHeight={cellHeight}
+                minNights={props.minNights}
+                blockedDates={props.blockedDates}
+                selection={props.date}
                 onClick={(d) => props.setDate((prev) => nextSelectionOnClick(prev, d, props.blockedDates, props.allowPastDates, props.allowSameDay, props.minNights, strikethroughDates, props.calendarType))}
               />
             );
