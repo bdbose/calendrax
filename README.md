@@ -9,8 +9,10 @@ A powerful React/TypeScript calendar component library with advanced date range 
 
 ✨ **Date Range Selection** - Check-in and check-out date picking with smart validation  
 📅 **Event Display** - Show events with custom styling and labels  
+📋 **Event Popups** - Hover/click tooltips for compressed single-day events  
 🚫 **Blocked Dates** - Prevent selection of specific dates with range validation  
 🏨 **Minimum Nights** - Enforce minimum stay requirements for booking systems  
+💡 **Minimum Nights Tooltips** - Interactive tooltips showing minimum night requirements  
 💰 **Day Info Display** - Show custom text below dates (prices, availability, etc.)  
 📱 **Responsive Design** - Optimized for both mobile and desktop  
 🎨 **Customizable Cell Sizes** - Adjustable date cell dimensions (desktop)  
@@ -209,9 +211,24 @@ import './my-custom-styles.css' // Your custom overrides
 Events are displayed as labels at the top of date cells. The event system supports:
 
 - **Multi-day events** - Events spanning multiple consecutive dates
+- **Single-day events** - Events that span only one day with popup support
+- **Event Popups** - Hover or click on compressed single-day events to see full event details
 - **Row boundaries** - Events break at week boundaries
 - **Dynamic width** - Labels adapt to screen size
 - **Future filtering** - Events only show on future dates (not past dates)
+- **Compression detection** - Automatically detects when event text is truncated
+
+### Event Popups
+
+For single-day events, when the event text is compressed (truncated), a popup appears on hover or click showing:
+- **Date**: Formatted as "25 Dec" 
+- **Event Name**: Full event name
+
+The popup features:
+- White background with black text
+- Positioned above the event with an arrow pointing down
+- Smart positioning to prevent screen overflow
+- Works on both desktop and mobile
 
 ### Event Example
 
@@ -328,10 +345,13 @@ Enforce minimum stay requirements for specific check-in dates, perfect for booki
 ### How It Works
 
 1. **Define Requirements**: Specify which dates require minimum stays
-2. **Visual Indicator**: Black "Min N Nights" label appears when date is selected as check-in
-3. **Validation**: Users cannot select checkout dates that don't meet the requirement
-4. **Strike-Through**: Insufficient dates are crossed out with a red line
-5. **Conflict Detection**: Automatically disabled if blocked dates exist in range
+2. **Interactive Tooltips**: Hover over dates with minimum nights to see tooltips showing the requirement (e.g., "2-night minimum")
+3. **Visual Indicator**: Black "Min N Nights" label appears when date is selected as check-in
+4. **Validation**: Users cannot select checkout dates that don't meet the requirement
+5. **Strike-Through**: Insufficient dates are crossed out with a red line
+6. **Conflict Detection**: Automatically disabled if blocked dates exist in range
+7. **Persistent Tooltips**: Tooltips stay visible until checkout is selected
+8. **Smart Positioning**: Tooltips automatically adjust position to prevent screen overflow (handles Monday/Sunday edge cases)
 
 ### Minimum Nights Example
 

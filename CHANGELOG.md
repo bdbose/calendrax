@@ -7,6 +7,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.9.0] - 2025-01-XX
+
+### Added
+- **Minimum Nights Tooltips**: Interactive tooltips that appear when hovering over dates with minimum night requirements
+  - Shows "{n}-night minimum" message
+  - Tooltips stay visible until checkout is selected
+  - Smart positioning to prevent screen overflow
+  - Handles edge cases (Monday/Sunday) with automatic position adjustment
+  - Works on both desktop and mobile views
+- **Event Popups**: Hover/click tooltips for single-day events with compressed text
+  - Automatically detects when event text is truncated
+  - Shows formatted date (e.g., "25 Dec") and full event name
+  - White background with black text styling
+  - Smart positioning to prevent screen overflow
+  - Works on both desktop and mobile views
+- New `EventLabel` component for enhanced event rendering with popup support
+- Enhanced event system to track single-day events separately
+
+### Changed
+- Updated minimum nights feature to show tooltips on hover
+- Event labels now support pointer events for single-day events
+- Improved event rendering to detect text compression
+- Enhanced CSS for tooltip and popup positioning
+
+### Documentation
+- Updated README with minimum nights tooltip feature
+- Updated README with event popup feature
+- Added examples and use cases for new features
+
 ## [0.2.0] - 2025-10-21
 
 ### Added
@@ -47,7 +76,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Next.js example
 - Documentation
 
-[Unreleased]: https://github.com/bdbose/calendrax/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/bdbose/calendrax/compare/v0.9.0...HEAD
+[0.9.0]: https://github.com/bdbose/calendrax/compare/v0.8.0...v0.9.0
+[0.8.0]: https://github.com/bdbose/calendrax/compare/v0.2.0...v0.8.0
 [0.2.0]: https://github.com/bdbose/calendrax/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/bdbose/calendrax/releases/tag/v0.1.0
 

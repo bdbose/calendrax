@@ -2,7 +2,8 @@ import { useEffect, useState, useMemo } from "react";
 import "./styles.css";
 import { generateCalendarDatesTrimmed } from "../../utils/generateMonth";
 import Dates from "../Dates";
-import type { SelectDateType, BlockedDates, DayInfo, MinNights, CalendarType } from "../../types/type";
+import EventLabel from "./EventLabel";
+import type { SelectDateType, BlockedDates, DayInfo, MinNights, CalendarType, CalendarEvent } from "../../types/type";
 import { getDateState, nextSelectionOnClick, isBeforeToday } from "../../utils/selection";
 import { buildEventMap, getEventLabel } from "../../utils/events";
 import { buildDayInfoMap, getDayInfo } from "../../utils/dayInfo";
@@ -81,6 +82,21 @@ const Months = (props: MonthProps) => {
     });
     return dates;
   }, [props.minNights, props.date.checkin, props.blockedDates]);
+
+  // Create a map from date string to event for single-day events
+  const singleDayEventMap = useMemo(() => {
+    const map = new Map<string, CalendarEvent>();
+    allEvents.forEach(event => {
+      const startDate = new Date(event.start_date);
+      const endDate = new Date(event.end_date);
+      // Check if it's a single-day event
+      if (event.start_date === event.end_date || 
+          (startDate.getTime() === endDate.getTime())) {
+        map.set(event.start_date, event);
+      }
+    });
+    return map;
+  }, [allEvents]);
   
   // Get dates to strike through (blocked by minimum nights restriction)
   const strikethroughDates = useMemo(() => 
@@ -164,24 +180,29 @@ const Months = (props: MonthProps) => {
           let currentLabel: string | null = null;
           let spanStart = -1;
           let currentIsMinNights = false;
+          let currentStartDate: Date | null = null;
 
-          const addEventLabel = (startIdx: number, endIdx: number, label: string, isMinNights: boolean = false) => {
+          const addEventLabel = (startIdx: number, endIdx: number, label: string, isMinNights: boolean = false, startDate?: Date | null) => {
             const span = endIdx - startIdx + 1;
             const startCol = (startIdx % 7) + 1;
             const row = Math.floor(startIdx / 7) + 2; // +2 because: row 1 is weekday headers
             
+            // Get event info for single-day events
+            const dateStr = startDate ? formatDate(startDate) : null;
+            const event = dateStr && span === 1 ? singleDayEventMap.get(dateStr) : undefined;
+            
             eventLabels.push(
-              <div
+              <EventLabel
                 key={`evt-${startIdx}-${label}`}
-                className={`event-label${isMinNights ? ' min-nights' : ''}`}
-                style={{
-                  gridColumn: `${startCol} / span ${span}`,
-                  gridRow: row,
-                }}
-                title={label}
-              >
-                {label}
-              </div>
+                label={label}
+                span={span}
+                startCol={startCol}
+                row={row}
+                isMinNights={isMinNights}
+                event={event}
+                startDate={startDate || undefined}
+                isMobile={props.isMobile}
+              />
             );
           };
 
@@ -201,10 +222,11 @@ const Months = (props: MonthProps) => {
               
               // Flush any ongoing event label
               if (currentLabel !== null && spanStart >= 0) {
-                addEventLabel(spanStart, idx - 1, currentLabel, currentIsMinNights);
+                addEventLabel(spanStart, idx - 1, currentLabel, currentIsMinNights, currentStartDate);
                 currentLabel = null;
                 spanStart = -1;
                 currentIsMinNights = false;
+                currentStartDate = null;
               }
               return;
             }
@@ -237,10 +259,11 @@ const Months = (props: MonthProps) => {
             
             if (isNewRow && currentLabel !== null && spanStart >= 0) {
               // Flush previous label at row boundary
-              addEventLabel(spanStart, idx - 1, currentLabel, currentIsMinNights);
+              addEventLabel(spanStart, idx - 1, currentLabel, currentIsMinNights, currentStartDate);
               currentLabel = null;
               spanStart = -1;
               currentIsMinNights = false;
+              currentStartDate = null;
             }
 
             if (label) {
@@ -249,26 +272,28 @@ const Months = (props: MonthProps) => {
               } else {
                 // Start new label
                 if (currentLabel !== null && spanStart >= 0) {
-                  addEventLabel(spanStart, idx - 1, currentLabel, currentIsMinNights);
+                  addEventLabel(spanStart, idx - 1, currentLabel, currentIsMinNights, currentStartDate);
                 }
                 currentLabel = label;
                 spanStart = idx;
                 currentIsMinNights = isMinNights;
+                currentStartDate = date;
               }
             } else {
               // No label for this date
               if (currentLabel !== null && spanStart >= 0) {
-                addEventLabel(spanStart, idx - 1, currentLabel, currentIsMinNights);
+                addEventLabel(spanStart, idx - 1, currentLabel, currentIsMinNights, currentStartDate);
                 currentLabel = null;
                 spanStart = -1;
                 currentIsMinNights = false;
+                currentStartDate = null;
               }
             }
           });
 
           // Flush any remaining label
           if (currentLabel !== null && spanStart >= 0) {
-            addEventLabel(spanStart, dates.length - 1, currentLabel, currentIsMinNights);
+            addEventLabel(spanStart, dates.length - 1, currentLabel, currentIsMinNights, currentStartDate);
           }
 
           return [...eventLabels, ...cells];
